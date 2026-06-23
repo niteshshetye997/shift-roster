@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shift Roster Dashboard</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --bg-secondary: #f5f5f4;
+    --bg-tertiary: #eeece8;
+    --text: #1a1a18;
+    --text-secondary: #6b6b67;
+    --text-tertiary: #a0a09b;
+    --border: rgba(0,0,0,0.12);
+    --border-md: rgba(0,0,0,0.22);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --font: system-ui, -apple-system, sans-serif;
+    --green-bg: #E1F5EE; --green-text: #0f6e56;
+    --blue-bg: #E6F1FB; --blue-text: #185FA5;
+    --purple-bg: #EEEDFE; --purple-text: #3C3489;
+    --red-bg: #FCEBEB; --red-text: #a32d2d;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a;
+      --bg-secondary: #252523;
+      --bg-tertiary: #2e2e2b;
+      --text: #f0ede8;
+      --text-secondary: #a8a8a2;
+      --text-tertiary: #6b6b66;
+      --border: rgba(255,255,255,0.1);
+      --border-md: rgba(255,255,255,0.2);
+      --green-bg: #085041; --green-text: #9FE1CB;
+      --blue-bg: #0C447C; --blue-text: #B5D4F4;
+      --purple-bg: #3C3489; --purple-text: #CECBF6;
+      --red-bg: #791F1F; --red-text: #F7C1C1;
+    }
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg-tertiary);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  header {
+    background: var(--bg);
+    border-bottom: 0.5px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 56px;
+  }
+
+  header .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  header .logo i { font-size: 20px; color: #178455; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .toolbar input, .toolbar select {
+    font-size: 13px;
+    padding: 6px 10px;
+    border: 0.5px solid var(--border-md);
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    color: var(--text);
+    height: 34px;
+    outline: none;
+  }
+
+  .toolbar input:focus, .toolbar select:focus {
+    box-shadow: 0 0 0 2px #178455aa;
+    border-color: #178455;
+  }
+
+  .toolbar input { width: 180px; }
+  .toolbar select { min-width: 130px; cursor: pointer; }
+
+  .btn {
+    font-size: 13px;
+    padding: 6px 14px;
+    border: 0.5px solid var(--border-md);
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    color: var(--text);
+    cursor: pointer;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font);
+    transition: background 0.12s;
+  }
+
+  .btn:hover { background: var(--bg-secondary); }
+  .btn:active { transform: scale(0.98); }
+
+  .btn.primary { background: #178455; color: #fff; border-color: #178455; }
+  .btn.primary:hover { background: #0f6e56; }
+
+  .btn.danger { color: var(--red-text); border-color: var(--red-text); }
+  .btn.danger:hover { background: var(--red-bg); }
+
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .metric {
+    background: var(--bg);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    border: 0.5px solid var(--border);
+  }
+
+  .metric-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
+  .metric-value { font-size: 24px; font-weight: 500; color: var(--text); }
+
+  .week-nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .week-label {
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 200px;
+    text-align: center;
+    color: var(--text);
+  }
+
+  .card {
+    background: var(--bg);
+    border-radius: var(--radius-lg);
+    border: 0.5px solid var(--border);
+    overflow: hidden;
+  }
+
+  .grid-wrap { overflow-x: auto; }
+
+  .roster-grid {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 620px;
+    font-size: 13px;
+  }
+
+  .roster-grid th {
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    font-weight: 500;
+    padding: 10px 12px;
+    border-bottom: 0.5px solid var(--border);
+    border-right: 0.5px solid var(--border);
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .roster-grid th.name-col { text-align: left; min-width: 160px; }
+
+  .roster-grid td {
+    border-bottom: 0.5px solid var(--border);
+    border-right: 0.5px solid var(--border);
+    padding: 4px 6px;
+    vertical-align: middle;
+  }
+
+  .roster-grid tr:last-child td { border-bottom: none; }
+
+  .roster-grid td.name-cell {
+    padding: 10px 12px;
+    min-width: 160px;
+  }
+
+  .name-main { font-weight: 500; color: var(--text); margin-bottom: 2px; }
+  .name-sub { font-size: 11px; color: var(--text-secondary); }
+
+  .shift-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    width: 100%;
+    font-family: var(--font);
+    transition: opacity 0.1s;
+  }
+
+  .shift-pill:hover { opacity: 0.8; }
+  .shift-pill:active { transform: scale(0.97); }
+
+  .shift-morning  { background: var(--green-bg);  color: var(--green-text); }
+  .shift-evening  { background: var(--blue-bg);   color: var(--blue-text); }
+  .shift-night    { background: var(--purple-bg); color: var(--purple-text); }
+  .shift-off      { background: var(--bg-secondary); color: var(--text-tertiary); }
+
+  .empty {
+    color: var(--text-tertiary);
+    font-size: 13px;
+    text-align: center;
+    padding: 32px;
+  }
+
+  /* Modal */
+  .modal-bg {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-bg.open { display: flex; }
+
+  .modal {
+    background: var(--bg);
+    border-radius: var(--radius-lg);
+    border: 0.5px solid var(--border-md);
+    padding: 24px;
+    width: 320px;
+    max-width: 90vw;
+  }
+
+  .modal h3 { font-size: 15px; font-weight: 500; margin-bottom: 16px; color: var(--text); }
+
+  .modal label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    display: block;
+    margin-bottom: 4px;
+    margin-top: 12px;
+  }
+
+  .modal input, .modal select {
+    width: 100%;
+    font-size: 13px;
+    padding: 7px 10px;
+    border: 0.5px solid var(--border-md);
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    outline: none;
+  }
+
+  .modal input:focus, .modal select:focus { box-shadow: 0 0 0 2px #178455aa; border-color: #178455; }
+
+  .modal-actions { display: flex; gap: 8px; margin-top: 20px; justify-content: flex-end; }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 10px 14px;
+    border-top: 0.5px solid var(--border);
+    background: var(--bg-secondary);
+  }
+
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
+
+  .legend-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 0 12px; }
+    .container { padding: 16px 10px; }
+    .toolbar input { width: 140px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <i class="ti ti-calendar-week" aria-hidden="true"></i>
+    Shift Roster
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="toolbar">
+    <input type="text" id="searchInput" placeholder="Search staff…" oninput="renderGrid()">
+    <select id="deptFilter" onchange="renderGrid()">
+      <option value="">All departments</option>
+      <option value="Kitchen">Kitchen</option>
+      <option value="Front of house">Front of house</option>
+      <option value="Bar">Bar</option>
+      <option value="Management">Management</option>
+    </select>
+    <select id="shiftFilter" onchange="renderGrid()">
+      <option value="">All shifts</option>
+      <option value="morning">Morning</option>
+      <option value="evening">Evening</option>
+      <option value="night">Night</option>
+      <option value="off">Day off</option>
+    </select>
+    <button class="btn primary" onclick="openAddModal()"><i class="ti ti-plus" aria-hidden="true"></i> Add staff</button>
+    <button class="btn" onclick="exportCSV()"><i class="ti ti-download" aria-hidden="true"></i> Export CSV</button>
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Total staff</div><div class="metric-value" id="mStaff">0</div></div>
+    <div class="metric"><div class="metric-label">Morning shifts</div><div class="metric-value" id="mMorning">0</div></div>
+    <div class="metric"><div class="metric-label">Evening shifts</div><div class="metric-value" id="mEvening">0</div></div>
+    <div class="metric"><div class="metric-label">Night shifts</div><div class="metric-value" id="mNight">0</div></div>
+    <div class="metric"><div class="metric-label">Days off</div><div class="metric-value" id="mOff">0</div></div>
+  </div>
+
+  <div class="week-nav">
+    <button class="btn" onclick="changeWeek(-1)" aria-label="Previous week"><i class="ti ti-arrow-left" aria-hidden="true"></i></button>
+    <span class="week-label" id="weekLabel"></span>
+    <button class="btn" onclick="changeWeek(1)" aria-label="Next week"><i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+  </div>
+
+  <div class="card">
+    <div class="grid-wrap">
+      <table class="roster-grid" id="rosterTable" aria-label="Weekly shift roster">
+        <thead id="thead"></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="legend">
+      <span class="legend-item"><span class="legend-dot" style="background:#1D9E75"></span>Morning</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#378ADD"></span>Evening</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#7F77DD"></span>Night</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#888780"></span>Day off</span>
+      <span style="font-size:12px;color:var(--text-tertiary);margin-left:auto">Click any shift to cycle</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- Add staff modal -->
+<div class="modal-bg" id="modalBg" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <h3 id="modalTitle">Add staff member</h3>
+    <label for="mName">Name</label>
+    <input type="text" id="mName" placeholder="Full name">
+    <label for="mRole">Role</label>
+    <input type="text" id="mRole" placeholder="e.g. Chef, Server">
+    <label for="mDept">Department</label>
+    <select id="mDept">
+      <option>Kitchen</option>
+      <option>Front of house</option>
+      <option>Bar</option>
+      <option>Management</option>
+    </select>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn primary" onclick="saveStaff()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const SHIFTS = ['morning','evening','night','off'];
+const SHIFT_LABELS = { morning:'Morning', evening:'Evening', night:'Night', off:'Off' };
+
+let weekOffset = 0;
+
+// Load from localStorage or use demo data
+let staff = JSON.parse(localStorage.getItem('roster_staff') || 'null') || [
+  {id:1,name:'Alice Nguyen',role:'Head Chef',dept:'Kitchen',schedule:{0:'morning',1:'morning',2:'morning',3:'off',4:'morning',5:'morning',6:'off'}},
+  {id:2,name:'Ben Carter',role:'Sous Chef',dept:'Kitchen',schedule:{0:'morning',1:'morning',2:'off',3:'morning',4:'morning',5:'evening',6:'evening'}},
+  {id:3,name:'Clara Smith',role:'Server',dept:'Front of house',schedule:{0:'evening',1:'evening',2:'evening',3:'evening',4:'off',5:'evening',6:'morning'}},
+  {id:4,name:'David Lee',role:'Bartender',dept:'Bar',schedule:{0:'night',1:'night',2:'off',3:'night',4:'night',5:'night',6:'night'}},
+  {id:5,name:'Emma Patel',role:'Manager',dept:'Management',schedule:{0:'morning',1:'morning',2:'morning',3:'morning',4:'morning',5:'off',6:'off'}},
+  {id:6,name:'Felix Wong',role:'Host',dept:'Front of house',schedule:{0:'off',1:'evening',2:'evening',3:'evening',4:'evening',5:'morning',6:'morning'}},
+];
+let nextId = Math.max(...staff.map(s=>s.id), 0) + 1;
+
+function save() {
+  localStorage.setItem('roster_staff', JSON.stringify(staff));
+}
+
+function getWeekDates() {
+  const today = new Date();
+  const day = today.getDay();
+  const mon = new Date(today);
+  mon.setDate(today.getDate() - (day===0 ? 6 : day-1) + weekOffset*7);
+  return DAYS.map((_,i) => { const d = new Date(mon); d.setDate(mon.getDate()+i); return d; });
+}
+
+function fmtDate(d) { return `${d.getDate()}/${d.getMonth()+1}`; }
+function changeWeek(dir) { weekOffset += dir; renderGrid(); }
+
+function getFiltered() {
+  const s = document.getElementById('searchInput').value.toLowerCase();
+  const dept = document.getElementById('deptFilter').value;
+  const sf = document.getElementById('shiftFilter').value;
+  return staff.filter(p => {
+    if (s && !p.name.toLowerCase().includes(s) && !p.role.toLowerCase().includes(s)) return false;
+    if (dept && p.dept !== dept) return false;
+    if (sf && !Object.values(p.schedule).includes(sf)) return false;
+    return true;
+  });
+}
+
+function renderGrid() {
+  const dates = getWeekDates();
+  const mon = dates[0], sun = dates[6];
+  document.getElementById('weekLabel').textContent = `${fmtDate(mon)} – ${fmtDate(sun)} ${sun.getFullYear()}`;
+  const filtered = getFiltered();
+
+  // metrics
+  let counts = { morning:0, evening:0, night:0, off:0 };
+  filtered.forEach(p => Object.values(p.schedule).forEach(s => counts[s] = (counts[s]||0)+1));
+  document.getElementById('mStaff').textContent = filtered.length;
+  document.getElementById('mMorning').textContent = counts.morning || 0;
+  document.getElementById('mEvening').textContent = counts.evening || 0;
+  document.getElementById('mNight').textContent = counts.night || 0;
+  document.getElementById('mOff').textContent = counts.off || 0;
+
+  // header
+  document.getElementById('thead').innerHTML =
+    `<tr><th class="name-col">Staff</th>${DAYS.map((_,i)=>`<th>${DAYS[i]}<br><span style="font-weight:400;font-size:11px;color:var(--text-tertiary)">${fmtDate(dates[i])}</span></th>`).join('')}<th>Actions</th></tr>`;
+
+  // body
+  const tbody = document.getElementById('tbody');
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="9" class="empty">No staff match your filters.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = filtered.map(p => `
+    <tr>
+      <td class="name-cell">
+        <div class="name-main">${p.name}</div>
+        <div class="name-sub">${p.role} · ${p.dept}</div>
+      </td>
+      ${[0,1,2,3,4,5,6].map(d => `
+        <td style="text-align:center;padding:4px 5px">
+          <button class="shift-pill shift-${p.schedule[d]||'off'}"
+            onclick="cycleShift(${p.id},${d})"
+            aria-label="Cycle shift for ${p.name} on ${DAYS[d]}">
+            ${SHIFT_LABELS[p.schedule[d]||'off']}
+          </button>
+        </td>`).join('')}
+      <td style="text-align:center;padding:4px">
+        <button class="btn danger" style="padding:4px 8px;font-size:12px;height:28px"
+          onclick="removeStaff(${p.id})" aria-label="Remove ${p.name}">
+          <i class="ti ti-trash" aria-hidden="true"></i>
+        </button>
+      </td>
+    </tr>`).join('');
+}
+
+function cycleShift(id, day) {
+  const p = staff.find(s => s.id === id);
+  if (!p) return;
+  const cur = p.schedule[day] || 'off';
+  p.schedule[day] = SHIFTS[(SHIFTS.indexOf(cur)+1) % SHIFTS.length];
+  save();
+  renderGrid();
+}
+
+function removeStaff(id) {
+  if (!confirm('Remove this staff member?')) return;
+  staff = staff.filter(s => s.id !== id);
+  save();
+  renderGrid();
+}
+
+function openAddModal() {
+  document.getElementById('mName').value = '';
+  document.getElementById('mRole').value = '';
+  document.getElementById('mDept').value = 'Kitchen';
+  document.getElementById('modalBg').classList.add('open');
+  setTimeout(() => document.getElementById('mName').focus(), 50);
+}
+
+function closeModal() { document.getElementById('modalBg').classList.remove('open'); }
+
+function saveStaff() {
+  const name = document.getElementById('mName').value.trim();
+  const role = document.getElementById('mRole').value.trim();
+  const dept = document.getElementById('mDept').value;
+  if (!name) { document.getElementById('mName').focus(); return; }
+  staff.push({ id: nextId++, name, role, dept, schedule:{0:'morning',1:'morning',2:'morning',3:'morning',4:'morning',5:'off',6:'off'} });
+  save();
+  closeModal();
+  renderGrid();
+}
+
+function exportCSV() {
+  const dates = getWeekDates();
+  const header = ['Name','Role','Department',...DAYS.map((_,i)=>DAYS[i]+' '+fmtDate(dates[i]))];
+  const rows = staff.map(p => [p.name, p.role, p.dept, ...[0,1,2,3,4,5,6].map(d=>SHIFT_LABELS[p.schedule[d]||'off'])]);
+  const csv = [header,...rows].map(r => r.map(v=>`"${v}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'shift_roster.csv';
+  a.click();
+}
+
+document.getElementById('modalBg').addEventListener('click', function(e) { if (e.target===this) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
+
+renderGrid();
+</script>
+</body>
+</html>
