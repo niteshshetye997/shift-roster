@@ -3,536 +3,292 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shift Roster Dashboard</title>
+<title>BASIS Roster 2026</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --bg: #ffffff;
-    --bg-secondary: #f5f5f4;
-    --bg-tertiary: #eeece8;
-    --text: #1a1a18;
-    --text-secondary: #6b6b67;
-    --text-tertiary: #a0a09b;
-    --border: rgba(0,0,0,0.12);
-    --border-md: rgba(0,0,0,0.22);
-    --radius-md: 8px;
-    --radius-lg: 12px;
-    --font: system-ui, -apple-system, sans-serif;
-    --green-bg: #E1F5EE; --green-text: #0f6e56;
-    --blue-bg: #E6F1FB; --blue-text: #185FA5;
-    --purple-bg: #EEEDFE; --purple-text: #3C3489;
-    --red-bg: #FCEBEB; --red-text: #a32d2d;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fff;--bg2:#f5f5f4;--bg3:#eeecea;
+  --text:#1a1a18;--text2:#6b6b67;--text3:#a0a09b;
+  --border:rgba(0,0,0,0.11);--border2:rgba(0,0,0,0.2);
+  --rm:8px;--rl:12px;
+  --g1-bg:#E1F5EE;--g1:#0f6e56;
+  --m-bg:#E6F1FB;--m:#185FA5;
+  --n-bg:#EEEDFE;--n:#3C3489;
+  --d-bg:#FAEEDA;--d:#854F0B;
+  --h-bg:#fcebeb;--h:#a32d2d;
+  --l-bg:#EAF3DE;--l:#3B6D11;
+  --o-bg:#f1efe8;--o:#5F5E5A;
+  --r-bg:#FBEAF0;--r:#993556;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#1c1c1a;--bg2:#252523;--bg3:#2e2e2b;
+    --text:#f0ede8;--text2:#a8a8a2;--text3:#6b6b66;
+    --border:rgba(255,255,255,0.09);--border2:rgba(255,255,255,0.18);
+    --g1-bg:#085041;--g1:#9FE1CB;
+    --m-bg:#0C447C;--m:#B5D4F4;
+    --n-bg:#3C3489;--n:#CECBF6;
+    --d-bg:#633806;--d:#FAC775;
+    --h-bg:#791F1F;--h:#F7C1C1;
+    --l-bg:#27500A;--l:#C0DD97;
+    --o-bg:#444441;--o:#D3D1C7;
+    --r-bg:#72243E;--r:#F4C0D1;
   }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #1c1c1a;
-      --bg-secondary: #252523;
-      --bg-tertiary: #2e2e2b;
-      --text: #f0ede8;
-      --text-secondary: #a8a8a2;
-      --text-tertiary: #6b6b66;
-      --border: rgba(255,255,255,0.1);
-      --border-md: rgba(255,255,255,0.2);
-      --green-bg: #085041; --green-text: #9FE1CB;
-      --blue-bg: #0C447C; --blue-text: #B5D4F4;
-      --purple-bg: #3C3489; --purple-text: #CECBF6;
-      --red-bg: #791F1F; --red-text: #F7C1C1;
-    }
-  }
-
-  body {
-    font-family: var(--font);
-    background: var(--bg-tertiary);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 0;
-  }
-
-  header {
-    background: var(--bg);
-    border-bottom: 0.5px solid var(--border);
-    padding: 0 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    height: 56px;
-  }
-
-  header .logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--text);
-  }
-
-  header .logo i { font-size: 20px; color: #178455; }
-
-  .container { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
-
-  .toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-
-  .toolbar input, .toolbar select {
-    font-size: 13px;
-    padding: 6px 10px;
-    border: 0.5px solid var(--border-md);
-    border-radius: var(--radius-md);
-    background: var(--bg);
-    color: var(--text);
-    height: 34px;
-    outline: none;
-  }
-
-  .toolbar input:focus, .toolbar select:focus {
-    box-shadow: 0 0 0 2px #178455aa;
-    border-color: #178455;
-  }
-
-  .toolbar input { width: 180px; }
-  .toolbar select { min-width: 130px; cursor: pointer; }
-
-  .btn {
-    font-size: 13px;
-    padding: 6px 14px;
-    border: 0.5px solid var(--border-md);
-    border-radius: var(--radius-md);
-    background: var(--bg);
-    color: var(--text);
-    cursor: pointer;
-    height: 34px;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: var(--font);
-    transition: background 0.12s;
-  }
-
-  .btn:hover { background: var(--bg-secondary); }
-  .btn:active { transform: scale(0.98); }
-
-  .btn.primary { background: #178455; color: #fff; border-color: #178455; }
-  .btn.primary:hover { background: #0f6e56; }
-
-  .btn.danger { color: var(--red-text); border-color: var(--red-text); }
-  .btn.danger:hover { background: var(--red-bg); }
-
-  .metrics {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  .metric {
-    background: var(--bg);
-    border-radius: var(--radius-md);
-    padding: 14px 16px;
-    border: 0.5px solid var(--border);
-  }
-
-  .metric-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
-  .metric-value { font-size: 24px; font-weight: 500; color: var(--text); }
-
-  .week-nav {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-
-  .week-label {
-    font-size: 14px;
-    font-weight: 500;
-    min-width: 200px;
-    text-align: center;
-    color: var(--text);
-  }
-
-  .card {
-    background: var(--bg);
-    border-radius: var(--radius-lg);
-    border: 0.5px solid var(--border);
-    overflow: hidden;
-  }
-
-  .grid-wrap { overflow-x: auto; }
-
-  .roster-grid {
-    border-collapse: collapse;
-    width: 100%;
-    min-width: 620px;
-    font-size: 13px;
-  }
-
-  .roster-grid th {
-    background: var(--bg-secondary);
-    color: var(--text-secondary);
-    font-weight: 500;
-    padding: 10px 12px;
-    border-bottom: 0.5px solid var(--border);
-    border-right: 0.5px solid var(--border);
-    text-align: center;
-    white-space: nowrap;
-  }
-
-  .roster-grid th.name-col { text-align: left; min-width: 160px; }
-
-  .roster-grid td {
-    border-bottom: 0.5px solid var(--border);
-    border-right: 0.5px solid var(--border);
-    padding: 4px 6px;
-    vertical-align: middle;
-  }
-
-  .roster-grid tr:last-child td { border-bottom: none; }
-
-  .roster-grid td.name-cell {
-    padding: 10px 12px;
-    min-width: 160px;
-  }
-
-  .name-main { font-weight: 500; color: var(--text); margin-bottom: 2px; }
-  .name-sub { font-size: 11px; color: var(--text-secondary); }
-
-  .shift-pill {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 20px;
-    padding: 4px 10px;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    width: 100%;
-    font-family: var(--font);
-    transition: opacity 0.1s;
-  }
-
-  .shift-pill:hover { opacity: 0.8; }
-  .shift-pill:active { transform: scale(0.97); }
-
-  .shift-morning  { background: var(--green-bg);  color: var(--green-text); }
-  .shift-evening  { background: var(--blue-bg);   color: var(--blue-text); }
-  .shift-night    { background: var(--purple-bg); color: var(--purple-text); }
-  .shift-off      { background: var(--bg-secondary); color: var(--text-tertiary); }
-
-  .empty {
-    color: var(--text-tertiary);
-    font-size: 13px;
-    text-align: center;
-    padding: 32px;
-  }
-
-  /* Modal */
-  .modal-bg {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .modal-bg.open { display: flex; }
-
-  .modal {
-    background: var(--bg);
-    border-radius: var(--radius-lg);
-    border: 0.5px solid var(--border-md);
-    padding: 24px;
-    width: 320px;
-    max-width: 90vw;
-  }
-
-  .modal h3 { font-size: 15px; font-weight: 500; margin-bottom: 16px; color: var(--text); }
-
-  .modal label {
-    font-size: 12px;
-    color: var(--text-secondary);
-    display: block;
-    margin-bottom: 4px;
-    margin-top: 12px;
-  }
-
-  .modal input, .modal select {
-    width: 100%;
-    font-size: 13px;
-    padding: 7px 10px;
-    border: 0.5px solid var(--border-md);
-    border-radius: var(--radius-md);
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font);
-    outline: none;
-  }
-
-  .modal input:focus, .modal select:focus { box-shadow: 0 0 0 2px #178455aa; border-color: #178455; }
-
-  .modal-actions { display: flex; gap: 8px; margin-top: 20px; justify-content: flex-end; }
-
-  /* Legend */
-  .legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    padding: 10px 14px;
-    border-top: 0.5px solid var(--border);
-    background: var(--bg-secondary);
-  }
-
-  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
-
-  .legend-dot {
-    width: 10px; height: 10px; border-radius: 50%;
-  }
-
-  @media (max-width: 600px) {
-    header { padding: 0 12px; }
-    .container { padding: 16px 10px; }
-    .toolbar input { width: 140px; }
-  }
+}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg3);color:var(--text);min-height:100vh}
+header{background:var(--bg);border-bottom:0.5px solid var(--border);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:52px;gap:12px}
+.logo{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:500;color:var(--text)}
+.logo i{font-size:20px;color:#178455}
+.header-right{display:flex;align-items:center;gap:8px}
+.container{max-width:1200px;margin:0 auto;padding:20px 14px}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+.toolbar input,.toolbar select{font-size:13px;padding:6px 10px;border:0.5px solid var(--border2);border-radius:var(--rm);background:var(--bg);color:var(--text);height:34px;outline:none}
+.toolbar input:focus,.toolbar select:focus{box-shadow:0 0 0 2px #178455aa;border-color:#178455}
+.toolbar input{width:170px}
+.toolbar select{min-width:130px;cursor:pointer}
+.btn{font-size:13px;padding:6px 14px;border:0.5px solid var(--border2);border-radius:var(--rm);background:var(--bg);color:var(--text);cursor:pointer;height:34px;display:inline-flex;align-items:center;gap:6px;font-family:inherit;transition:background .1s}
+.btn:hover{background:var(--bg2)}.btn:active{transform:scale(.98)}
+.btn.primary{background:#178455;color:#fff;border-color:#178455}.btn.primary:hover{background:#0f6e56}
+.tabs{display:flex;gap:4px;margin-bottom:16px;border-bottom:0.5px solid var(--border);padding-bottom:0}
+.tab{font-size:13px;padding:8px 16px;cursor:pointer;border-radius:var(--rm) var(--rm) 0 0;color:var(--text2);background:none;border:none;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab:hover{color:var(--text);background:var(--bg2)}
+.tab.active{color:#178455;border-bottom-color:#178455;font-weight:500}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:16px}
+.metric{background:var(--bg);border-radius:var(--rm);padding:12px 14px;border:0.5px solid var(--border)}
+.metric-label{font-size:11px;color:var(--text2);margin-bottom:4px}
+.metric-value{font-size:22px;font-weight:500}
+.week-nav{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.week-label{font-size:14px;font-weight:500;min-width:200px;text-align:center}
+.card{background:var(--bg);border-radius:var(--rl);border:0.5px solid var(--border);overflow:hidden}
+.grid-wrap{overflow-x:auto}
+.roster-grid{border-collapse:collapse;width:100%;min-width:700px;font-size:12px}
+.roster-grid th{background:var(--bg2);color:var(--text2);font-weight:500;padding:8px 10px;border-bottom:0.5px solid var(--border);border-right:0.5px solid var(--border);text-align:center;white-space:nowrap}
+.roster-grid th.name-col{text-align:left;min-width:150px}
+.roster-grid td{border-bottom:0.5px solid var(--border);border-right:0.5px solid var(--border);padding:3px 5px;vertical-align:middle}
+.roster-grid tr:last-child td{border-bottom:none}
+.roster-grid td.name-cell{padding:8px 10px;min-width:150px}
+.name-main{font-weight:500;color:var(--text);font-size:13px}
+.name-sub{font-size:11px;color:var(--text2)}
+.pill{display:inline-flex;align-items:center;justify-content:center;border-radius:20px;padding:3px 8px;font-size:11px;font-weight:500;width:100%;white-space:nowrap}
+.pill-G1{background:var(--g1-bg);color:var(--g1)}
+.pill-M{background:var(--m-bg);color:var(--m)}
+.pill-N{background:var(--n-bg);color:var(--n)}
+.pill-D{background:var(--d-bg);color:var(--d)}
+.pill-H{background:var(--h-bg);color:var(--h)}
+.pill-L{background:var(--l-bg);color:var(--l)}
+.pill-O{background:var(--o-bg);color:var(--o)}
+.pill-R{background:var(--r-bg);color:var(--r)}
+.pill-empty{background:var(--bg2);color:var(--text3)}
+.empty{color:var(--text3);font-size:13px;text-align:center;padding:28px}
+.legend{display:flex;flex-wrap:wrap;gap:10px;padding:10px 14px;border-top:0.5px solid var(--border);background:var(--bg2)}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2)}
+.legend-dot{width:10px;height:10px;border-radius:50%}
+/* On-call table */
+.oncall-table{border-collapse:collapse;width:100%;font-size:12px;min-width:600px}
+.oncall-table th{background:var(--bg2);color:var(--text2);font-weight:500;padding:8px 10px;border:0.5px solid var(--border);text-align:center;white-space:nowrap}
+.oncall-table td{border:0.5px solid var(--border);padding:6px 10px;text-align:center;color:var(--text2)}
+.oncall-table td.person{text-align:left;color:var(--text);font-weight:500}
+.oncall-badge{background:#E1F5EE;color:#0f6e56;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:500}
+@media(prefers-color-scheme:dark){.oncall-badge{background:#085041;color:#9FE1CB}}
+@media(max-width:600px){.container{padding:12px 8px}.toolbar input{width:130px}}
 </style>
 </head>
 <body>
-
 <header>
-  <div class="logo">
-    <i class="ti ti-calendar-week" aria-hidden="true"></i>
-    Shift Roster
+  <div class="logo"><i class="ti ti-calendar-stats" aria-hidden="true"></i> BASIS Roster 2026</div>
+  <div class="header-right">
+    <button class="btn" onclick="exportCSV()"><i class="ti ti-download" aria-hidden="true"></i> Export</button>
   </div>
 </header>
-
 <div class="container">
-
-  <div class="toolbar">
-    <input type="text" id="searchInput" placeholder="Search staff…" oninput="renderGrid()">
-    <select id="deptFilter" onchange="renderGrid()">
-      <option value="">All departments</option>
-      <option value="Kitchen">Kitchen</option>
-      <option value="Front of house">Front of house</option>
-      <option value="Bar">Bar</option>
-      <option value="Management">Management</option>
-    </select>
-    <select id="shiftFilter" onchange="renderGrid()">
-      <option value="">All shifts</option>
-      <option value="morning">Morning</option>
-      <option value="evening">Evening</option>
-      <option value="night">Night</option>
-      <option value="off">Day off</option>
-    </select>
-    <button class="btn primary" onclick="openAddModal()"><i class="ti ti-plus" aria-hidden="true"></i> Add staff</button>
-    <button class="btn" onclick="exportCSV()"><i class="ti ti-download" aria-hidden="true"></i> Export CSV</button>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('shifts',this)">Shifts</button>
+    <button class="tab" onclick="switchTab('oncall',this)">On-Call Roster</button>
   </div>
 
-  <div class="metrics">
-    <div class="metric"><div class="metric-label">Total staff</div><div class="metric-value" id="mStaff">0</div></div>
-    <div class="metric"><div class="metric-label">Morning shifts</div><div class="metric-value" id="mMorning">0</div></div>
-    <div class="metric"><div class="metric-label">Evening shifts</div><div class="metric-value" id="mEvening">0</div></div>
-    <div class="metric"><div class="metric-label">Night shifts</div><div class="metric-value" id="mNight">0</div></div>
-    <div class="metric"><div class="metric-label">Days off</div><div class="metric-value" id="mOff">0</div></div>
-  </div>
-
-  <div class="week-nav">
-    <button class="btn" onclick="changeWeek(-1)" aria-label="Previous week"><i class="ti ti-arrow-left" aria-hidden="true"></i></button>
-    <span class="week-label" id="weekLabel"></span>
-    <button class="btn" onclick="changeWeek(1)" aria-label="Next week"><i class="ti ti-arrow-right" aria-hidden="true"></i></button>
-  </div>
-
-  <div class="card">
-    <div class="grid-wrap">
-      <table class="roster-grid" id="rosterTable" aria-label="Weekly shift roster">
-        <thead id="thead"></thead>
-        <tbody id="tbody"></tbody>
-      </table>
+  <!-- SHIFTS TAB -->
+  <div id="tab-shifts">
+    <div class="toolbar">
+      <input type="text" id="searchInput" placeholder="Search name…" oninput="renderGrid()">
+      <select id="locFilter" onchange="renderGrid()">
+        <option value="">All locations</option>
+        <option>Pune</option><option>Bangalore</option><option>Hyderabad</option>
+        <option>Mumbai</option><option>Gurugram</option>
+      </select>
+      <select id="shiftFilter" onchange="renderGrid()">
+        <option value="">All shifts</option>
+        <option value="G1">G1</option><option value="M">M – Mid</option>
+        <option value="N">N – Night</option><option value="D">D – Day</option>
+        <option value="H">H – Holiday</option><option value="L">L – Leave</option>
+        <option value="O">O – Off</option><option value="R">R – Resigned</option>
+      </select>
     </div>
-    <div class="legend">
-      <span class="legend-item"><span class="legend-dot" style="background:#1D9E75"></span>Morning</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#378ADD"></span>Evening</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#7F77DD"></span>Night</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#888780"></span>Day off</span>
-      <span style="font-size:12px;color:var(--text-tertiary);margin-left:auto">Click any shift to cycle</span>
+    <div class="metrics">
+      <div class="metric"><div class="metric-label">Staff shown</div><div class="metric-value" id="mStaff">0</div></div>
+      <div class="metric"><div class="metric-label" style="color:var(--g1)">G1</div><div class="metric-value" id="mG1">0</div></div>
+      <div class="metric"><div class="metric-label" style="color:var(--m)">Mid (M)</div><div class="metric-value" id="mM">0</div></div>
+      <div class="metric"><div class="metric-label" style="color:var(--n)">Night (N)</div><div class="metric-value" id="mN">0</div></div>
+      <div class="metric"><div class="metric-label" style="color:var(--d)">Day (D)</div><div class="metric-value" id="mD">0</div></div>
+      <div class="metric"><div class="metric-label" style="color:var(--l)">Leave (L)</div><div class="metric-value" id="mL">0</div></div>
+    </div>
+    <div class="week-nav">
+      <button class="btn" onclick="changeWeek(-1)" aria-label="Prev week"><i class="ti ti-arrow-left" aria-hidden="true"></i></button>
+      <span class="week-label" id="weekLabel"></span>
+      <button class="btn" onclick="changeWeek(1)" aria-label="Next week"><i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+    </div>
+    <div class="card">
+      <div class="grid-wrap">
+        <table class="roster-grid" id="rosterTable" aria-label="Weekly shift roster">
+          <thead id="thead"></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-dot" style="background:var(--g1)"></span>G1 – General</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--m)"></span>M – Mid</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--n)"></span>N – Night</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--d)"></span>D – Day</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--h)"></span>H – Holiday</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--l)"></span>L – Leave</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--o)"></span>O – Off</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--r)"></span>R – Resigned</span>
+      </div>
     </div>
   </div>
 
-</div>
-
-<!-- Add staff modal -->
-<div class="modal-bg" id="modalBg" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-  <div class="modal">
-    <h3 id="modalTitle">Add staff member</h3>
-    <label for="mName">Name</label>
-    <input type="text" id="mName" placeholder="Full name">
-    <label for="mRole">Role</label>
-    <input type="text" id="mRole" placeholder="e.g. Chef, Server">
-    <label for="mDept">Department</label>
-    <select id="mDept">
-      <option>Kitchen</option>
-      <option>Front of house</option>
-      <option>Bar</option>
-      <option>Management</option>
-    </select>
-    <div class="modal-actions">
-      <button class="btn" onclick="closeModal()">Cancel</button>
-      <button class="btn primary" onclick="saveStaff()">Save</button>
+  <!-- ON-CALL TAB -->
+  <div id="tab-oncall" style="display:none">
+    <div class="card">
+      <div class="grid-wrap">
+        <table class="oncall-table" aria-label="On-call roster">
+          <thead>
+            <tr>
+              <th colspan="2">Resources</th>
+              <th>JAN W4</th>
+              <th>FEB W1</th><th>FEB W2</th><th>FEB W3</th><th>FEB W4</th>
+              <th>MAR W1</th><th>MAR W2</th><th>MAR W3</th><th>MAR W4</th>
+              <th>APR W1</th><th>APR W2</th><th>APR W3</th><th>APR W4</th>
+              <th>MAY W1</th><th>MAY W2</th><th>MAY W3</th><th>MAY W4</th><th>MAY W5</th>
+              <th>JUN W1</th><th>JUN W2</th><th>JUN W3</th><th>JUN W4</th>
+            </tr>
+          </thead>
+          <tbody id="oncallBody"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-const SHIFTS = ['morning','evening','night','off'];
-const SHIFT_LABELS = { morning:'Morning', evening:'Evening', night:'Night', off:'Off' };
+const STAFF = [{"name":"Shubham Chittora","location":"Pune","email":"shubham.chittora@accenture.com","contact":"8208013761","schedule":{"2026-01-01":"H","2026-01-02":"G1","2026-01-05":"G1","2026-01-06":"G1","2026-01-07":"G1","2026-01-08":"G1","2026-01-09":"G1","2026-01-12":"G1","2026-01-13":"G1","2026-01-14":"G1","2026-01-15":"G1","2026-01-16":"G1","2026-01-19":"G1","2026-01-20":"G1","2026-01-21":"G1","2026-01-22":"G1","2026-01-23":"G1","2026-01-26":"H","2026-01-27":"G1","2026-01-28":"G1","2026-01-29":"G1","2026-01-30":"G1","2026-02-02":"G1","2026-02-03":"G1","2026-02-04":"G1","2026-02-05":"G1","2026-02-06":"G1","2026-02-09":"G1","2026-02-10":"G1","2026-02-11":"G1","2026-02-12":"G1","2026-02-13":"G1","2026-02-16":"G1","2026-02-17":"G1","2026-02-18":"G1","2026-02-19":"G1","2026-02-20":"G1","2026-02-23":"G1","2026-02-24":"G1","2026-02-25":"G1","2026-02-26":"G1","2026-02-27":"G1","2026-03-02":"G1","2026-03-03":"H","2026-03-04":"G1","2026-03-05":"G1","2026-03-06":"G1","2026-03-09":"G1","2026-03-10":"G1","2026-03-11":"G1","2026-03-12":"G1","2026-03-13":"G1","2026-03-16":"G1","2026-03-17":"G1","2026-03-18":"G1","2026-03-19":"G1","2026-03-20":"G1","2026-03-23":"G1","2026-03-24":"G1","2026-03-25":"G1","2026-03-26":"G1","2026-03-27":"G1","2026-03-30":"G1","2026-03-31":"G1","2026-04-01":"G1","2026-04-02":"G1","2026-04-03":"G1","2026-04-06":"G1","2026-04-07":"G1","2026-04-08":"G1","2026-04-09":"G1","2026-04-10":"G1","2026-04-13":"G1","2026-04-14":"G1","2026-04-15":"G1","2026-04-16":"G1","2026-04-17":"G1","2026-04-20":"G1","2026-04-21":"G1","2026-04-22":"G1","2026-04-23":"G1","2026-04-24":"G1","2026-04-27":"G1","2026-04-28":"G1","2026-04-29":"G1","2026-04-30":"G1","2026-05-01":"H","2026-05-04":"G1","2026-05-05":"G1","2026-05-06":"G1","2026-05-07":"G1","2026-05-08":"G1","2026-05-11":"G1","2026-05-12":"G1","2026-05-13":"G1","2026-05-14":"G1","2026-05-15":"G1","2026-05-18":"G1","2026-05-19":"G1","2026-05-20":"G1","2026-05-21":"G1","2026-05-22":"G1","2026-05-25":"G1","2026-05-26":"G1","2026-05-27":"G1","2026-05-28":"H","2026-05-29":"G1","2026-06-01":"G1","2026-06-02":"G1","2026-06-03":"G1","2026-06-04":"G1","2026-06-05":"G1","2026-06-08":"G1","2026-06-09":"G1","2026-06-10":"G1","2026-06-11":"G1","2026-06-12":"G1","2026-06-15":"G1","2026-06-16":"G1","2026-06-17":"G1","2026-06-18":"G1","2026-06-19":"G1","2026-06-22":"G1","2026-06-23":"G1","2026-06-24":"G1","2026-06-25":"G1","2026-06-26":"G1","2026-06-29":"G1","2026-06-30":"G1","2026-07-01":"G1","2026-07-02":"G1","2026-07-03":"G1"}},{"name":"Divya Pithwa","location":"Pune","email":"d.mahendra.pithwa@accenture.com","contact":"8888994770","schedule":{"2026-01-01":"H","2026-01-02":"G1","2026-01-05":"G1","2026-01-06":"G1","2026-01-07":"G1","2026-01-08":"G1","2026-01-09":"G1","2026-01-12":"G1","2026-01-13":"G1","2026-01-14":"G1","2026-01-15":"H","2026-01-16":"G1","2026-01-19":"G1","2026-01-20":"G1","2026-01-21":"G1","2026-01-22":"G1","2026-01-23":"G1","2026-01-26":"H","2026-01-27":"G1","2026-01-28":"G1","2026-01-29":"G1","2026-01-30":"G1","2026-01-31":"O","2026-02-01":"O","2026-02-02":"G1","2026-02-03":"G1","2026-02-04":"G1","2026-02-05":"G1","2026-02-06":"G1","2026-02-09":"G1","2026-02-10":"G1","2026-02-11":"G1","2026-02-12":"G1","2026-02-13":"G1","2026-02-16":"G1","2026-02-17":"G1","2026-02-18":"G1","2026-02-19":"G1","2026-02-20":"G1","2026-02-23":"G1","2026-02-24":"G1","2026-02-25":"G1","2026-02-26":"G1","2026-02-27":"G1","2026-03-02":"G1","2026-03-03":"G1","2026-03-04":"G1","2026-03-05":"G1","2026-03-06":"G1","2026-03-09":"G1","2026-03-10":"G1","2026-03-11":"G1","2026-03-12":"G1","2026-03-13":"G1","2026-03-16":"L","2026-03-17":"G1","2026-03-18":"G1","2026-03-19":"G1","2026-03-20":"G1","2026-03-23":"G1","2026-03-24":"G1","2026-03-25":"G1","2026-03-26":"G1","2026-03-27":"G1","2026-03-30":"G1","2026-03-31":"G1","2026-04-01":"G1","2026-04-02":"G1","2026-04-03":"L","2026-04-06":"G1","2026-04-07":"G1","2026-04-08":"G1","2026-04-09":"G1","2026-04-10":"G1","2026-04-11":"O","2026-04-12":"O","2026-04-13":"G1","2026-04-14":"G1","2026-04-15":"G1","2026-04-16":"G1","2026-04-17":"G1","2026-04-20":"G1","2026-04-21":"G1","2026-04-22":"G1","2026-04-23":"G1","2026-04-24":"G1","2026-04-27":"G1","2026-04-28":"G1","2026-04-29":"G1","2026-04-30":"G1","2026-05-01":"H","2026-05-04":"G1","2026-05-05":"G1","2026-05-06":"G1","2026-05-07":"G1","2026-05-08":"G1","2026-05-11":"G1","2026-05-12":"G1","2026-05-13":"G1","2026-05-14":"G1","2026-05-15":"G1","2026-05-18":"G1","2026-05-19":"G1","2026-05-20":"G1","2026-05-21":"G1","2026-05-22":"G1","2026-05-25":"G1","2026-05-26":"G1","2026-05-27":"G1","2026-05-28":"G1","2026-05-29":"G1","2026-06-01":"G1","2026-06-02":"G1","2026-06-03":"G1","2026-06-04":"G1","2026-06-05":"L","2026-06-08":"G1","2026-06-09":"G1","2026-06-10":"L","2026-06-11":"G1","2026-06-12":"G1","2026-06-15":"G1","2026-06-16":"G1","2026-06-17":"G1","2026-06-18":"G1","2026-06-19":"G1","2026-06-22":"G1","2026-06-23":"G1","2026-06-24":"G1","2026-06-25":"G1","2026-06-26":"G1","2026-06-27":"O","2026-06-28":"O","2026-06-29":"G1","2026-06-30":"G1","2026-07-01":"G1","2026-07-02":"G1","2026-07-03":"G1"}},{"name":"Nitesh Shetye","location":"Pune","email":"nitesh.nitin.shetye@accenture.com","contact":"8652444785","schedule":{"2026-01-01":"L","2026-01-02":"L","2026-01-05":"G1","2026-01-06":"G1","2026-01-07":"G1","2026-01-08":"G1","2026-01-09":"G1","2026-01-12":"G1","2026-01-13":"G1","2026-01-14":"G1","2026-01-15":"G1","2026-01-16":"G1","2026-01-19":"G1","2026-01-20":"G1","2026-01-21":"G1","2026-01-22":"G1","2026-01-23":"G1","2026-01-26":"G1","2026-01-27":"G1","2026-01-28":"G1","2026-01-29":"G1","2026-01-30":"G1","2026-02-02":"G1","2026-02-03":"G1","2026-02-04":"G1","2026-02-05":"G1","2026-02-06":"G1","2026-02-09":"G1","2026-02-10":"G1","2026-02-11":"G1","2026-02-12":"G1","2026-02-13":"G1","2026-02-16":"G1","2026-02-17":"G1","2026-02-18":"G1","2026-02-19":"G1","2026-02-20":"G1","2026-02-23":"G1","2026-02-24":"G1","2026-02-25":"G1","2026-02-26":"G1","2026-02-27":"G1","2026-02-28":"O","2026-03-01":"O","2026-03-02":"G1","2026-03-03":"H","2026-03-04":"G1","2026-03-05":"G1","2026-03-06":"G1","2026-03-09":"G1","2026-03-10":"G1","2026-03-11":"G1","2026-03-12":"G1","2026-03-13":"G1","2026-03-16":"G1","2026-03-17":"G1","2026-03-18":"G1","2026-03-19":"G1","2026-03-20":"G1","2026-03-23":"G1","2026-03-24":"G1","2026-03-25":"G1","2026-03-26":"G1","2026-03-27":"G1","2026-03-30":"G1","2026-03-31":"G1","2026-04-01":"G1","2026-04-02":"G1","2026-04-03":"G1","2026-04-06":"G1","2026-04-07":"G1","2026-04-08":"G1","2026-04-09":"G1","2026-04-10":"G1","2026-04-13":"G1","2026-04-14":"G1","2026-04-15":"G1","2026-04-16":"G1","2026-04-17":"G1","2026-04-20":"G1","2026-04-21":"G1","2026-04-22":"G1","2026-04-23":"G1","2026-04-24":"G1","2026-04-27":"G1","2026-04-28":"G1","2026-04-29":"G1","2026-04-30":"G1","2026-05-01":"G1","2026-05-04":"G1","2026-05-05":"G1","2026-05-06":"G1","2026-05-07":"G1","2026-05-08":"G1","2026-05-09":"O","2026-05-10":"O","2026-05-11":"G1","2026-05-12":"G1","2026-05-13":"G1","2026-05-14":"G1","2026-05-15":"G1","2026-05-18":"G1","2026-05-19":"G1","2026-05-20":"G1","2026-05-21":"G1","2026-05-22":"G1","2026-05-25":"G1","2026-05-26":"G1","2026-05-27":"G1","2026-05-28":"H","2026-05-29":"G1","2026-06-01":"G1","2026-06-02":"G1","2026-06-03":"G1","2026-06-04":"G1","2026-06-05":"G1","2026-06-08":"G1","2026-06-09":"G1","2026-06-10":"G1","2026-06-11":"G1","2026-06-12":"G1","2026-06-15":"G1","2026-06-16":"G1","2026-06-17":"G1","2026-06-18":"G1","2026-06-19":"G1","2026-06-22":"G1","2026-06-23":"G1","2026-06-24":"G1","2026-06-25":"G1","2026-06-26":"G1","2026-06-29":"G1","2026-06-30":"G1","2026-07-01":"G1","2026-07-02":"G1","2026-07-03":"G1"}},{"name":"Adi Sattaiah","location":"Hyderabad","email":"sattaiah.adi@accenture.com","contact":"9833928378","schedule":{"2026-01-01":"H","2026-01-02":"G1","2026-01-05":"G1","2026-01-06":"G1","2026-01-07":"G1","2026-01-08":"G1","2026-01-09":"G1","2026-01-12":"G1","2026-01-13":"G1","2026-01-14":"L","2026-01-15":"H","2026-01-16":"L","2026-01-19":"G1","2026-01-20":"G1","2026-01-21":"G1","2026-01-22":"G1","2026-01-23":"G1","2026-01-26":"G1","2026-01-27":"G1","2026-01-28":"G1","2026-01-29":"G1","2026-01-30":"G1","2026-02-02":"G1","2026-02-03":"G1","2026-02-04":"G1","2026-02-05":"G1","2026-02-06":"G1","2026-02-09":"G1","2026-02-10":"G1","2026-02-11":"G1","2026-02-12":"G1","2026-02-13":"G1","2026-02-16":"G1","2026-02-17":"G1","2026-02-18":"G1","2026-02-19":"G1","2026-02-20":"G1","2026-02-23":"G1","2026-02-24":"G1","2026-02-25":"G1","2026-02-26":"G1","2026-02-27":"G1","2026-03-02":"G1","2026-03-03":"G1","2026-03-04":"G1","2026-03-05":"G1","2026-03-06":"G1","2026-03-07":"O","2026-03-08":"O","2026-03-09":"G1","2026-03-10":"G1","2026-03-11":"G1","2026-03-12":"G1","2026-03-13":"G1","2026-03-16":"G1","2026-03-17":"G1","2026-03-18":"G1","2026-03-19":"G1","2026-03-20":"G1","2026-03-23":"G1","2026-03-24":"G1","2026-03-25":"G1","2026-03-26":"G1","2026-03-27":"G1","2026-03-30":"G1","2026-03-31":"G1","2026-04-01":"G1","2026-04-02":"G1","2026-04-03":"G1","2026-04-06":"G1","2026-04-07":"G1","2026-04-08":"G1","2026-04-09":"G1","2026-04-10":"G1","2026-04-13":"G1","2026-04-14":"G1","2026-04-15":"G1","2026-04-16":"G1","2026-04-17":"G1","2026-04-20":"G1","2026-04-21":"G1","2026-04-22":"G1","2026-04-23":"G1","2026-04-24":"G1","2026-04-27":"G1","2026-04-28":"G1","2026-04-29":"G1","2026-04-30":"G1","2026-05-01":"H","2026-05-04":"G1","2026-05-05":"G1","2026-05-06":"G1","2026-05-07":"G1","2026-05-08":"G1","2026-05-11":"G1","2026-05-12":"G1","2026-05-13":"G1","2026-05-14":"G1","2026-05-15":"G1","2026-05-16":"O","2026-05-17":"O","2026-05-18":"G1","2026-05-19":"G1","2026-05-20":"G1","2026-05-21":"G1","2026-05-22":"G1","2026-05-25":"L","2026-05-26":"L","2026-05-27":"G1","2026-05-28":"G1","2026-05-29":"G1","2026-06-01":"G1","2026-06-02":"H","2026-06-03":"G1","2026-06-04":"G1","2026-06-05":"G1","2026-06-08":"G1","2026-06-09":"G1","2026-06-10":"G1","2026-06-11":"G1","2026-06-12":"G1","2026-06-15":"G1","2026-06-16":"G1","2026-06-17":"G1","2026-06-18":"G1","2026-06-19":"G1","2026-06-22":"G1","2026-06-23":"G1","2026-06-24":"G1","2026-06-25":"G1","2026-06-26":"G1","2026-06-29":"G1","2026-06-30":"G1","2026-07-01":"G1","2026-07-02":"G1","2026-07-03":"G1"}},{"name":"Abhinav Saran","location":"Bangalore","email":"abhinav.saran@accenture.com","contact":"9545587757","schedule":{"2026-01-01":"G1","2026-01-02":"G1","2026-01-05":"G1","2026-01-06":"G1","2026-01-07":"G1","2026-01-08":"G1","2026-01-09":"G1","2026-01-12":"G1","2026-01-13":"G1","2026-01-14":"G1","2026-01-15":"H","2026-01-16":"G1","2026-01-19":"G1","2026-01-20":"G1","2026-01-21":"G1","2026-01-22":"G1","2026-01-23":"G1","2026-01-26":"H","2026-01-27":"G1","2026-01-28":"G1","2026-01-29":"G1","2026-01-30":"G1","2026-02-02":"G1","2026-02-03":"G1","2026-02-04":"G1","2026-02-05":"G1","2026-02-06":"G1","2026-02-09":"G1","2026-02-10":"G1","2026-02-11":"G1","2026-02-12":"G1","2026-02-13":"G1","2026-02-16":"G1","2026-02-17":"G1","2026-02-18":"G1","2026-02-19":"G1","2026-02-20":"G1","2026-02-23":"G1","2026-02-24":"G1","2026-02-25":"G1","2026-02-26":"G1","2026-02-27":"G1","2026-03-02":"G1","2026-03-03":"G1","2026-03-04":"G1","2026-03-05":"G1","2026-03-06":"G1","2026-03-09":"G1","2026-03-10":"G1","2026-03-11":"G1","2026-03-12":"G1","2026-03-13":"G1","2026-03-16":"G1","2026-03-17":"G1","2026-03-18":"G1","2026-03-19":"G1","2026-03-20":"G1","2026-03-23":"G1","2026-03-24":"G1","2026-03-25":"G1","2026-03-26":"G1","2026-03-27":"G1","2026-03-30":"G1","2026-03-31":"G1","2026-04-01":"G1","2026-04-02":"G1","2026-04-03":"G1","2026-04-06":"G1","2026-04-07":"G1","2026-04-08":"G1","2026-04-09":"G1","2026-04-10":"G1","2026-04-13":"L","2026-04-14":"L","2026-04-15":"L","2026-04-16":"L","2026-04-17":"L","2026-04-20":"L","2026-04-21":"L","2026-04-22":"L","2026-04-23":"L","2026-04-24":"L","2026-04-27":"G1","2026-04-28":"G1","2026-04-29":"G1","2026-04-30":"G1","2026-05-01":"H","2026-05-04":"G1","2026-05-05":"G1","2026-05-06":"G1","2026-05-07":"G1","2026-05-08":"G1","2026-05-11":"G1","2026-05-12":"G1","2026-05-13":"G1","2026-05-14":"G1","2026-05-15":"G1","2026-05-18":"G1","2026-05-19":"G1","2026-05-20":"G1","2026-05-21":"G1","2026-05-22":"G1","2026-05-25":"G1","2026-05-26":"G1","2026-05-27":"G1","2026-05-28":"G1","2026-05-29":"G1","2026-06-01":"G1","2026-06-02":"G1","2026-06-03":"G1","2026-06-04":"G1","2026-06-05":"G1","2026-06-08":"G1","2026-06-09":"G1","2026-06-10":"G1","2026-06-11":"G1","2026-06-12":"G1","2026-06-15":"G1","2026-06-16":"G1","2026-06-17":"G1","2026-06-18":"G1","2026-06-19":"G1","2026-06-22":"G1","2026-06-23":"G1","2026-06-24":"G1","2026-06-25":"G1","2026-06-26":"G1","2026-06-29":"G1","2026-06-30":"G1","2026-07-01":"G1","2026-07-02":"G1","2026-07-03":"G1"}},{"name":"Nikhil Velurkar","location":"Pune","email":"nikhi.verulkar@accenture.com","contact":"8793001610","schedule":{"2026-01-01":"H","2026-01-02":"L","2026-01-05":"G1","2026-01-06":"G1","2026-01-07":"G1","2026-01-08":"G1","2026-01-09":"G1","2026-01-12":"G1","2026-01-13":"G1","2026-01-14":"G1","2026-01-15":"H","2026-01-16":"G1","2026-01-19":"G1","2026-01-20":"G1","2026-01-21":"G1","2026-01-22":"G1","2026-01-23":"G1","2026-01-26":"H","2026-01-27":"G1","2026-01-28":"G1","2026-01-29":"G1","2026-01-30":"G1","2026-02-02":"G1","2026-02-03":"G1","2026-02-04":"G1","2026-02-05":"G1","2026-02-06":"G1","2026-02-09":"G1","2026-02-10":"G1","2026-02-11":"G1","2026-02-12":"G1","2026-02-13":"G1","2026-02-16":"G1","2026-02-17":"G1","2026-02-18":"G1","2026-02-19":"G1","2026-02-20":"G1","2026-02-23":"G1","2026-02-24":"G1","2026-02-25":"G1","2026-02-26":"G1","2026-02-27":"G1","2026-03-02":"G1","2026-03-03":"H","2026-03-04":"G1","2026-03-05":"G1","2026-03-06":"G1","2026-03-09":"G1","2026-03-10":"G1","2026-03-11":"G1","2026-03-12":"G1","2026-03-13":"G1","2026-03-16":"G1","2026-03-17":"G1","2026-03-18":"G1","2026-03-19":"G1","2026-03-20":"G1","2026-03-23":"G1","2026-03-24":"G1","2026-03-25":"G1","2026-03-26":"G1","2026-03-27":"G1","2026-03-30":"G1","2026-03-31":"G1","2026-04-01":"G1","2026-04-02":"G1","2026-04-03":"G1","2026-04-06":"G1","2026-04-07":"G1","2026-04-08":"G1","2026-04-09":"G1","2026-04-10":"G1","2026-04-13":"G1","2026-04-14":"G1","2026-04-15":"G1","2026-04-16":"G1","2026-04-17":"G1","2026-04-20":"G1","2026-04-21":"G1","2026-04-22":"G1","2026-04-23":"G1","2026-04-24":"G1","2026-04-27":"G1","2026-04-28":"G1","2026-04-29":"G1","2026-04-30":"G1","2026-05-01":"H","2026-05-04":"G1","2026-05-05":"G1","2026-05-06":"G1","2026-05-07":"G1","2026-05-08":"G1","2026-05-11":"G1","2026-05-12":"G1","2026-05-13":"G1","2026-05-14":"G1","2026-05-15":"G1","2026-05-18":"G1","2026-05-19":"G1","2026-05-20":"G1","2026-05-21":"G1","2026-05-22":"G1","2026-05-25":"G1","2026-05-26":"G1","2026-05-27":"G1","2026-05-28":"H","2026-05-29":"G1","2026-06-01":"G1","2026-06-02":"G1","2026-06-03":"G1","2026-06-04":"G1","2026-06-05":"G1","2026-06-08":"G1","2026-06-09":"G1","2026-06-10":"G1","2026-06-11":"G1","2026-06-12":"G1","2026-06-15":"G1","2026-06-16":"G1","2026-06-17":"G1","2026-06-18":"G1","2026-06-19":"G1","2026-06-22":"G1","2026-06-23":"G1","2026-06-24":"G1","2026-06-25":"G1","2026-06-26":"G1","2026-06-29":"G1","2026-06-30":"G1","2026-07-01":"G1","2026-07-02":"G1","2026-07-03":"G1"}},{"name":"Pankaj Pandey","location":"Gurugram","email":"pankaj.f.pandey@accenture.com","contact":"9560802233","schedule":{"2026-01-01":"H","2026-01-02":"G1","2026-01-05":"G1","2026-01-06":"G1","2026-01-07":"G1","2026-01-08":"G1","2026-01-09":"G1","2026-01-12":"G1","2026-01-13":"G1","2026-01-14":"G1","2026-01-15":"G1","2026-01-16":"G1","2026-01-19":"G1","2026-01-20":"G1","2026-01-21":"G1","2026-01-22":"G1","2026-01-23":"G1","2026-01-26":"H","2026-01-27":"G1","2026-01-28":"G1","2026-01-29":"G1","2026-01-30":"G1","2026-02-02":"G1","2026-02-03":"G1","2026-02-04":"G1","2026-02-05":"G1","2026-02-06":"G1","2026-02-09":"G1","2026-02-10":"G1","2026-02-11":"G1","2026-02-12":"G1","2026-02-13":"G1","2026-02-16":"G1","2026-02-17":"G1","2026-02-18":"G1","2026-02-19":"G1","2026-02-20":"G1","2026-02-23":"G1","2026-02-24":"G1","2026-02-25":"G1","2026-02-26":"G1","2026-02-27":"G1","2026-03-02":"G1","2026-03-03":"G1","2026-03-04":"H","2026-03-05":"G1","2026-03-06":"G1","2026-03-09":"G1","2026-03-10":"G1","2026-03-11":"G1","2026-03-12":"G1","2026-03-13":"G1","2026-03-16":"G1","2026-03-17":"G1","2026-03-18":"G1","2026-03-19":"G1","2026-03-20":"G1","2026-03-23":"G1","2026-03-24":"G1","2026-03-25":"G1","2026-03-26":"G1","2026-03-27":"G1","2026-03-30":"G1","2026-03-31":"G1","2026-04-01":"G1","2026-04-02":"G1","2026-04-03":"G1","2026-04-06":"G1","2026-04-07":"G1","2026-04-08":"G1","2026-04-09":"G1","2026-04-10":"G1","2026-04-13":"G1","2026-04-14":"G1","2026-04-15":"G1","2026-04-16":"G1","2026-04-17":"G1","2026-04-20":"G1","2026-04-21":"G1","2026-04-22":"G1","2026-04-23":"G1","2026-04-24":"G1","2026-04-27":"G1","2026-04-28":"G1","2026-04-29":"G1","2026-04-30":"G1","2026-05-01":"G1","2026-05-04":"G1","2026-05-05":"G1","2026-05-06":"G1","2026-05-07":"G1","2026-05-08":"G1","2026-05-11":"G1","2026-05-12":"G1","2026-05-13":"G1","2026-05-14":"G1","2026-05-15":"G1","2026-05-18":"G1","2026-05-19":"G1","2026-05-20":"G1","2026-05-21":"G1","2026-05-22":"G1","2026-05-25":"G1","2026-05-26":"G1","2026-05-27":"H","2026-05-28":"G1","2026-05-29":"G1","2026-06-01":"G1","2026-06-02":"G1","2026-06-03":"G1","2026-06-04":"G1","2026-06-05":"G1","2026-06-08":"G1","2026-06-09":"G1","2026-06-10":"G1","2026-06-11":"G1","2026-06-12":"G1","2026-06-15":"G1","2026-06-16":"G1","2026-06-17":"G1","2026-06-18":"G1","2026-06-19":"G1","2026-06-22":"G1","2026-06-23":"G1","2026-06-24":"G1","2026-06-25":"G1","2026-06-26":"G1","2026-06-29":"G1","2026-06-30":"G1","2026-07-01":"G1","2026-07-02":"G1","2026-07-03":"G1"}},{"name":"Nishant Mahajan","location":"Pune","email":"nishant.b.mahajan@accenture.com","contact":"9960820664","schedule":{"2026-01-01":"H","2026-01-02":"G1","2026-01-05":"G1","2026-01-06":"G1","2026-01-07":"G1","2026-01-08":"G1","2026-01-09":"G1","2026-01-10":"O","2026-01-11":"O","2026-01-12":"G1","2026-01-13":"G1","2026-01-14":"G1","2026-01-15":"G1","2026-01-16":"G1","2026-01-19":"M","2026-01-20":"M","2026-01-21":"M","2026-01-22":"M","2026-01-23":"M","2026-01-26":"H","2026-01-27":"L","2026-01-28":"L","2026-01-29":"L","2026-01-30":"L","2026-02-02":"N","2026-02-03":"N","2026-02-04":"N","2026-02-05":"N","2026-02-06":"N","2026-02-09":"D","2026-02-10":"D","2026-02-11":"D","2026-02-12":"D","2026-02-13":"D","2026-02-16":"G1","2026-02-17":"G1","2026-02-18":"G1","2026-02-19":"G1","2026-02-20":"G1","2026-02-23":"G1","2026-02-24":"G1","2026-02-25":"G1","2026-02-26":"G1","2026-02-27":"G1","2026-03-02":"G1","2026-03-03":"G1","2026-03-04":"G1","2026-03-05":"G1","2026-03-06":"G1","2026-03-09":"M","2026-03-10":"M","2026-03-11":"M","2026-03-12":"M","2026-03-13":"M","2026-03-14":"O","2026-03-15":"O","2026-03-16":"M","2026-03-17":"M","2026-03-18":"M","2026-03-19":"M","2026-03-20":"M","2026-03-23":"N","2026-03-24":"N","2026-03-25":"N","2026-03-26":"N","2026-03-27":"N","2026-03-30":"D","2026-03-31":"D","2026-04-01":"D","2026-04-02":"D","2026-04-03":"D","2026-04-06":"G1","2026-04-07":"G1","2026-04-08":"G1","2026-04-09":"G1","2026-04-10":"G1","2026-04-13":"G1","2026-04-14":"G1","2026-04-15":"G1","2026-04-16":"G1","2026-04-17":"G1","2026-04-20":"L","2026-04-21":"L","2026-04-22":"L","2026-04-23":"L","2026-04-24":"L","2026-04-27":"M","2026-04-28":"M","2026-04-29":"M","2026-04-30":"M","2026-05-01":"H","2026-05-04":"M","2026-05-05":"M","2026-05-06":"M","2026-05-07":"M","2026-05-08":"M","2026-05-10":"N","2026-05-11":"N","2026-05-12":"N","2026-05-13":"N","2026-05-14":"N","2026-05-15":"N","2026-05-18":"D","2026-05-19":"D","2026-05-20":"D","2026-05-21":"D","2026-05-22":"D","2026-05-23":"O","2026-05-24":"O","2026-05-25":"G1","2026-05-26":"G1","2026-05-27":"G1","2026-05-28":"G1","2026-05-29":"G1","2026-06-01":"G1","2026-06-02":"G1","2026-06-03":"G1","2026-06-04":"G1","2026-06-05":"G1","2026-06-08":"G1","2026-06-09":"G1","2026-06-10":"G1","2026-06-11":"G1","2026-06-12":"G1","2026-06-15":"M","2026-06-16":"M","2026-06-17":"M","2026-06-18":"M","2026-06-19":"M","2026-06-22":"M","2026-06-23":"M","2026-06-24":"M","2026-06-25":"M","2026-06-26":"M","2026-06-29":"N","2026-06-30":"N","2026-07-01":"N","2026-07-02":"N","2026-07-03":"N"}},{"name":"Kriti Singh","location":"Gurugram","email":"kriti.f.singh@accenture.com","contact":"9717896650","schedule":{"2026-01-01":"N","2026-01-02":"N","2026-01-05":"D","2026-01-06":"D","2026-01-07":"D","2026-01-08":"D","2026-01-09":"D","2026-01-12":"D","2026-01-13":"D","2026-01-14":"D","2026-01-15":"D","2026-01-16":"D","2026-01-19":"G1","2026-01-20":"G1","2026-01-21":"G1","2026-01-22":"G1","2026-01-23":"G1","2026-01-26":"H","2026-01-27":"M","2026-01-28":"M","2026-01-29":"M","2026-01-30":"M","2026-01-31":"O","2026-02-01":"O","2026-02-02":"M","2026-02-03":"M","2026-02-04":"M","2026-02-05":"M","2026-02-06":"M","2026-02-09":"M","2026-02-10":"M","2026-02-11":"M","2026-02-12":"M","2026-02-13":"M","2026-02-15":"N","2026-02-16":"N","2026-02-17":"N","2026-02-18":"N","2026-02-19":"N","2026-02-20":"N","2026-02-23":"D","2026-02-24":"D","2026-02-25":"D","2026-02-26":"D","2026-02-27":"D","2026-03-02":"G1","2026-03-03":"G1","2026-03-04":"H","2026-03-05":"G1","2026-03-06":"G1","2026-03-09":"G1","2026-03-10":"G1","2026-03-11":"G1","2026-03-12":"G1","2026-03-13":"G1","2026-03-16":"G1","2026-03-17":"G1","2026-03-18":"G1","2026-03-19":"G1","2026-03-20":"G1","2026-03-23":"G1","2026-03-24":"G1","2026-03-25":"G1","2026-03-26":"G1","2026-03-27":"G1","2026-03-30":"M","2026-03-31":"M","2026-04-01":"M","2026-04-02":"M","2026-04-03":"M","2026-04-06":"M","2026-04-07":"M","2026-04-08":"M","2026-04-09":"M","2026-04-10":"M","2026-04-11":"O","2026-04-12":"O","2026-04-13":"N","2026-04-14":"N","2026-04-15":"N","2026-04-16":"N","2026-04-17":"N","2026-04-20":"D","2026-04-21":"D","2026-04-22":"D","2026-04-23":"D","2026-04-24":"D","2026-04-27":"D","2026-04-28":"D","2026-04-29":"D","2026-04-30":"D","2026-05-01":"D","2026-05-04":"G1","2026-05-05":"G1","2026-05-06":"G1","2026-05-07":"G1","2026-05-08":"G1","2026-05-11":"G1","2026-05-12":"G1","2026-05-13":"G1","2026-05-14":"G1","2026-05-15":"G1","2026-05-18":"G1","2026-05-19":"G1","2026-05-20":"G1","2026-05-21":"G1","2026-05-22":"G1","2026-05-25":"M","2026-05-26":"M","2026-05-27":"H","2026-05-28":"M","2026-05-29":"M","2026-06-01":"M","2026-06-02":"M","2026-06-03":"M","2026-06-04":"M","2026-06-05":"M","2026-06-07":"N","2026-06-08":"N","2026-06-09":"N","2026-06-10":"N","2026-06-11":"N","2026-06-12":"N","2026-06-15":"D","2026-06-16":"D","2026-06-17":"D","2026-06-18":"D","2026-06-19":"D","2026-06-20":"O","2026-06-21":"O","2026-06-22":"D","2026-06-23":"D","2026-06-24":"D","2026-06-25":"D","2026-06-26":"D","2026-06-29":"G1","2026-06-30":"G1","2026-07-01":"G1","2026-07-02":"G1","2026-07-03":"G1"}},{"name":"Prajol Naesvankar","location":"Mumbai","email":"prajol.nesvankar@accenture.com","contact":"7045533798","schedule":{"2026-01-01":"H","2026-01-02":"G1","2026-01-05":"G1","2026-01-06":"G1","2026-01-07":"G1","2026-01-08":"G1","2026-01-09":"G1","2026-01-12":"G1","2026-01-13":"G1","2026-01-14":"G1","2026-01-15":"G1","2026-01-16":"G1","2026-01-19":"G1","2026-01-20":"G1","2026-01-21":"G1","2026-01-22":"G1","2026-01-23":"G1","2026-01-26":"G1","2026-01-27":"G1","2026-01-28":"G1","2026-01-29":"G1","2026-01-30":"G1","2026-02-23":"G1","2026-02-24":"G1","2026-02-25":"G1","2026-02-26":"G1","2026-02-27":"G1","2026-03-02":"G1","2026-03-03":"G1","2026-03-04":"G1","2026-03-05":"G1","2026-03-06":"G1","2026-03-09":"G1","2026-03-10":"G1","2026-03-11":"G1","2026-03-12":"G1","2026-03-13":"G1","2026-03-16":"G1","2026-03-17":"G1","2026-03-18":"G1","2026-03-19":"G1","2026-03-20":"G1","2026-03-23":"G1","2026-03-24":"G1","2026-03-25":"G1","2026-03-26":"G1","2026-03-27":"G1","2026-03-30":"G1","2026-03-31":"G1","2026-04-01":"G1","2026-04-02":"G1","2026-04-03":"G1","2026-04-06":"G1","2026-04-07":"G1","2026-04-08":"G1","2026-04-09":"G1","2026-04-10":"G1","2026-04-13":"G1","2026-04-14":"G1","2026-04-15":"G1","2026-04-16":"G1","2026-04-17":"G1","2026-04-20":"G1","2026-04-21":"G1","2026-04-22":"G1","2026-04-23":"G1","2026-04-24":"G1","2026-04-27":"G1","2026-04-28":"G1","2026-04-29":"G1","2026-04-30":"G1","2026-05-01":"H","2026-05-04":"G1","2026-05-05":"G1","2026-05-06":"G1","2026-05-07":"G1","2026-05-08":"G1","2026-05-11":"G1","2026-05-12":"G1","2026-05-13":"G1","2026-05-14":"G1","2026-05-15":"G1","2026-05-18":"G1","2026-05-19":"G1","2026-05-20":"G1","2026-05-21":"G1","2026-05-22":"G1","2026-05-25":"G1","2026-05-26":"G1","2026-05-27":"G1","2026-05-28":"G1","2026-05-29":"G1","2026-06-01":"G1","2026-06-02":"G1","2026-06-03":"G1","2026-06-04":"G1","2026-06-05":"G1","2026-06-08":"G1","2026-06-09":"G1","2026-06-10":"G1","2026-06-11":"G1","2026-06-12":"G1","2026-06-15":"G1","2026-06-16":"G1","2026-06-17":"G1","2026-06-18":"G1","2026-06-19":"G1","2026-06-20":"O","2026-06-21":"O","2026-06-22":"G1","2026-06-23":"G1","2026-06-24":"G1","2026-06-25":"G1","2026-06-26":"G1","2026-06-29":"G1","2026-06-30":"G1","2026-07-01":"G1","2026-07-02":"G1","2026-07-03":"G1"}},{"name":"Vaishnavi Pandey","location":"Pune","email":"v.shrikant.pandey@accenture.com","contact":"9657088343","schedule":{"2026-01-01":"H","2026-01-02":"G1","2026-01-05":"G1","2026-01-06":"G1","2026-01-07":"G1","2026-01-08":"G1","2026-01-09":"G1","2026-01-10":"O","2026-01-11":"O","2026-01-12":"M","2026-01-13":"M","2026-01-14":"M","2026-01-15":"M","2026-01-16":"M","2026-01-19":"M","2026-01-20":"M","2026-01-21":"M","2026-01-22":"M","2026-01-23":"L","2026-01-25":"N","2026-01-26":"N","2026-01-27":"N","2026-01-28":"N","2026-01-29":"N","2026-01-30":"N","2026-02-02":"D","2026-02-03":"D","2026-02-04":"D","2026-02-05":"D","2026-02-06":"D","2026-02-09":"G1","2026-02-10":"G1","2026-02-11":"G1","2026-02-12":"G1","2026-02-13":"G1","2026-02-16":"G1","2026-02-17":"G1","2026-02-18":"G1","2026-02-19":"G1","2026-02-20":"G1","2026-02-22":"N","2026-02-23":"D","2026-02-24":"G1","2026-02-25":"G1","2026-02-26":"G1","2026-02-27":"G1","2026-03-02":"M","2026-03-03":"H","2026-03-04":"M","2026-03-05":"M","2026-03-06":"M","2026-03-09":"M","2026-03-10":"M","2026-03-11":"M","2026-03-12":"M","2026-03-13":"M","2026-03-14":"O","2026-03-15":"O","2026-03-16":"N","2026-03-17":"N","2026-03-18":"N","2026-03-19":"N","2026-03-20":"N","2026-03-23":"D","2026-03-24":"D","2026-03-25":"D","2026-03-26":"D","2026-03-27":"D","2026-03-30":"D","2026-03-31":"D","2026-04-01":"D","2026-04-02":"D","2026-04-03":"D","2026-04-06":"G1","2026-04-07":"G1","2026-04-08":"G1","2026-04-09":"G1","2026-04-10":"G1","2026-04-13":"G1","2026-04-14":"G1","2026-04-15":"G1","2026-04-16":"G1","2026-04-17":"G1","2026-04-20":"G1","2026-04-21":"G1","2026-04-22":"G1","2026-04-23":"G1","2026-04-24":"G1","2026-04-27":"M","2026-04-28":"M","2026-04-29":"M","2026-04-30":"M","2026-05-01":"M","2026-05-04":"M","2026-05-05":"M","2026-05-06":"M","2026-05-07":"M","2026-05-08":"M","2026-05-11":"N","2026-05-12":"N","2026-05-13":"N","2026-05-14":"N","2026-05-15":"N","2026-05-18":"D","2026-05-19":"D","2026-05-20":"D","2026-05-21":"D","2026-05-22":"D","2026-05-23":"O","2026-05-24":"O","2026-05-25":"D","2026-05-26":"D","2026-05-27":"D","2026-05-28":"H","2026-05-29":"D","2026-06-01":"G1","2026-06-02":"G1","2026-06-03":"G1","2026-06-04":"G1","2026-06-05":"G1","2026-06-08":"G1","2026-06-09":"G1","2026-06-10":"G1","2026-06-11":"G1","2026-06-12":"G1","2026-06-15":"M","2026-06-16":"M","2026-06-17":"M","2026-06-18":"M","2026-06-19":"M","2026-06-22":"M","2026-06-23":"M","2026-06-24":"M","2026-06-25":"M","2026-06-26":"M","2026-06-28":"N","2026-06-29":"N","2026-06-30":"N","2026-07-01":"N","2026-07-02":"N","2026-07-03":"N"}},{"name":"Archana Macha","location":"Hyderabad","email":"macha.archana@accenture.com","contact":"8688074215","schedule":{"2026-01-01":"M","2026-01-02":"M","2026-01-03":"O","2026-01-04":"O","2026-01-05":"M","2026-01-06":"M","2026-01-07":"M","2026-01-08":"M","2026-01-09":"M","2026-01-12":"N","2026-01-13":"N","2026-01-14":"N","2026-01-15":"N","2026-01-16":"N","2026-01-19":"D","2026-01-20":"D","2026-01-21":"D","2026-01-22":"D","2026-01-23":"D","2026-01-26":"H","2026-01-27":"D","2026-01-28":"D","2026-01-29":"D","2026-01-30":"D","2026-02-02":"G1","2026-02-03":"G1","2026-02-04":"G1","2026-02-05":"G1","2026-02-06":"G1","2026-02-09":"G1","2026-02-10":"G1","2026-02-11":"G1","2026-02-12":"G1","2026-02-13":"G1","2026-02-16":"G1","2026-02-17":"G1","2026-02-18":"G1","2026-02-19":"G1","2026-02-20":"G1","2026-02-23":"M","2026-02-24":"M","2026-02-25":"M","2026-02-26":"M","2026-02-27":"M","2026-03-02":"M","2026-03-03":"M","2026-03-04":"M","2026-03-05":"M","2026-03-06":"M","2026-03-08":"N","2026-03-09":"N","2026-03-10":"N","2026-03-11":"N","2026-03-12":"N","2026-03-13":"N","2026-03-16":"D","2026-03-17":"D","2026-03-18":"D","2026-03-19":"D","2026-03-20":"D","2026-03-21":"O","2026-03-22":"O","2026-03-23":"D","2026-03-24":"D","2026-03-25":"D","2026-03-26":"D","2026-03-27":"D","2026-03-30":"G1","2026-03-31":"G1","2026-04-01":"G1","2026-04-02":"G1","2026-04-03":"G1","2026-04-06":"G1","2026-04-07":"G1","2026-04-08":"G1","2026-04-09":"G1","2026-04-10":"G1","2026-04-13":"G1","2026-04-14":"G1","2026-04-15":"G1","2026-04-16":"G1","2026-04-17":"G1","2026-04-20":"M","2026-04-21":"M","2026-04-22":"M","2026-04-23":"M","2026-04-24":"M","2026-04-27":"M","2026-04-28":"M","2026-04-29":"M","2026-04-30":"M","2026-05-01":"M","2026-05-03":"N","2026-05-04":"N","2026-05-05":"N","2026-05-06":"N","2026-05-07":"N","2026-05-08":"N","2026-05-11":"D","2026-05-12":"D","2026-05-13":"D","2026-05-14":"D","2026-05-15":"D","2026-05-18":"L","2026-05-19":"L","2026-05-20":"G1","2026-05-21":"G1","2026-05-22":"G1","2026-05-25":"G1","2026-05-26":"G1","2026-05-27":"H","2026-05-28":"G1","2026-05-29":"G1","2026-05-30":"O","2026-05-31":"O","2026-06-01":"G1","2026-06-02":"H","2026-06-03":"R","2026-06-04":"R","2026-06-05":"R","2026-06-06":"R","2026-06-07":"R","2026-06-08":"R","2026-06-09":"R","2026-06-10":"R","2026-06-11":"R","2026-06-12":"R","2026-06-13":"R","2026-06-14":"R","2026-06-15":"R","2026-06-16":"R","2026-06-17":"R","2026-06-18":"R","2026-06-19":"R","2026-06-20":"R","2026-06-21":"R","2026-06-22":"R","2026-06-23":"R","2026-06-24":"R","2026-06-25":"R","2026-06-26":"R","2026-06-29":"R","2026-06-30":"R","2026-07-01":"R","2026-07-02":"R","2026-07-03":"R"}},{"name":"Qainat Firoz","location":"Mumbai","email":"qainaat.firoz@accenture.com","contact":"7906073770","schedule":{"2026-01-01":"H","2026-01-02":"L","2026-01-05":"N","2026-01-06":"N","2026-01-07":"N","2026-01-08":"N","2026-01-09":"N","2026-01-12":"D","2026-01-13":"D","2026-01-14":"L","2026-01-15":"H","2026-01-16":"L","2026-01-19":"L","2026-01-20":"D","2026-01-21":"D","2026-01-22":"D","2026-01-23":"D","2026-01-26":"G1","2026-01-27":"G1","2026-01-28":"G1","2026-01-29":"G1","2026-01-30":"G1","2026-02-02":"G1","2026-02-03":"G1","2026-02-04":"G1","2026-02-05":"G1","2026-02-06":"G1","2026-02-09":"G1","2026-02-10":"G1","2026-02-11":"G1","2026-02-12":"G1","2026-02-13":"G1","2026-02-14":"O","2026-02-15":"O","2026-02-16":"M","2026-02-17":"M","2026-02-18":"M","2026-02-19":"M","2026-02-20":"M","2026-02-23":"M","2026-02-24":"M","2026-02-25":"M","2026-02-26":"M","2026-02-27":"M","2026-03-02":"N","2026-03-03":"N","2026-03-04":"N","2026-03-05":"N","2026-03-06":"N","2026-03-09":"D","2026-03-10":"D","2026-03-11":"D","2026-03-12":"D","2026-03-13":"D","2026-03-16":"G1","2026-03-17":"G1","2026-03-18":"G1","2026-03-19":"G1","2026-03-20":"G1","2026-03-23":"L","2026-03-24":"L","2026-03-25":"L","2026-03-26":"G1","2026-03-27":"G1","2026-03-30":"G1","2026-03-31":"G1","2026-04-01":"G1","2026-04-02":"G1","2026-04-03":"L","2026-04-06":"M","2026-04-07":"M","2026-04-08":"M","2026-04-09":"M","2026-04-10":"M","2026-04-13":"M","2026-04-14":"M","2026-04-15":"M","2026-04-16":"M","2026-04-17":"M","2026-04-20":"N","2026-04-21":"N","2026-04-22":"N","2026-04-23":"N","2026-04-24":"N","2026-04-25":"O","2026-04-26":"O","2026-04-27":"D","2026-04-28":"D","2026-04-29":"D","2026-04-30":"D","2026-05-01":"H","2026-05-04":"G1","2026-05-05":"G1","2026-05-06":"G1","2026-05-07":"G1","2026-05-08":"G1","2026-05-11":"G1","2026-05-12":"G1","2026-05-13":"G1","2026-05-14":"G1","2026-05-15":"G1","2026-05-18":"G1","2026-05-19":"G1","2026-05-20":"G1","2026-05-21":"G1","2026-05-22":"G1","2026-05-25":"M","2026-05-26":"M","2026-05-27":"M","2026-05-28":"M","2026-05-29":"M","2026-06-01":"M","2026-06-02":"M","2026-06-03":"M","2026-06-04":"M","2026-06-05":"M","2026-06-08":"N","2026-06-09":"N","2026-06-10":"N","2026-06-11":"N","2026-06-12":"N","2026-06-15":"L","2026-06-16":"D","2026-06-17":"D","2026-06-18":"D","2026-06-19":"D","2026-06-22":"G1","2026-06-23":"G1","2026-06-24":"G1","2026-06-25":"G1","2026-06-26":"G1","2026-06-29":"G1","2026-06-30":"G1","2026-07-01":"G1","2026-07-02":"G1","2026-07-03":"G1"}},{"name":"Jayant Patel","location":"Pune","email":"jayant.patel@accenture.com","contact":"8600194833","schedule":{"2026-01-01":"G1","2026-01-02":"G1","2026-01-05":"G1","2026-01-06":"G1","2026-01-07":"G1","2026-01-08":"G1","2026-01-09":"G1","2026-01-12":"G1","2026-01-13":"G1","2026-01-14":"G1","2026-01-15":"G1","2026-01-16":"G1","2026-01-17":"O","2026-01-18":"O","2026-01-19":"G1","2026-01-20":"G1","2026-01-21":"G1","2026-01-22":"G1","2026-01-23":"G1","2026-01-26":"G1","2026-01-27":"G1","2026-01-28":"G1","2026-01-29":"G1","2026-01-30":"G1","2026-02-02":"G1","2026-02-03":"G1","2026-02-04":"G1","2026-02-05":"G1","2026-02-06":"G1","2026-02-09":"G1","2026-02-10":"G1","2026-02-11":"G1","2026-02-12":"G1","2026-02-13":"G1","2026-02-16":"G1","2026-02-17":"G1","2026-02-18":"G1","2026-02-19":"G1","2026-02-20":"G1","2026-02-23":"G1","2026-02-24":"G1","2026-02-25":"G1","2026-02-26":"G1","2026-02-27":"G1","2026-03-02":"G1","2026-03-03":"H","2026-03-04":"G1","2026-03-05":"G1","2026-03-06":"G1","2026-03-09":"G1","2026-03-10":"G1","2026-03-11":"G1","2026-03-12":"G1","2026-03-13":"G1","2026-03-16":"G1","2026-03-17":"G1","2026-03-18":"G1","2026-03-19":"G1","2026-03-20":"G1","2026-03-23":"G1","2026-03-24":"G1","2026-03-25":"G1","2026-03-26":"G1","2026-03-27":"G1","2026-03-28":"O","2026-03-29":"O","2026-03-30":"G1","2026-03-31":"G1","2026-04-01":"G1","2026-04-02":"G1","2026-04-03":"G1","2026-04-06":"G1","2026-04-07":"G1","2026-04-08":"G1","2026-04-09":"G1","2026-04-10":"G1","2026-04-13":"G1","2026-04-14":"G1","2026-04-15":"G1","2026-04-16":"G1","2026-04-17":"G1","2026-04-20":"G1","2026-04-21":"G1","2026-04-22":"G1","2026-04-23":"G1","2026-04-24":"G1","2026-04-27":"G1","2026-04-28":"G1","2026-04-29":"G1","2026-04-30":"G1","2026-05-01":"G1","2026-05-04":"G1","2026-05-05":"G1","2026-05-06":"G1","2026-05-07":"G1","2026-05-08":"G1","2026-05-11":"G1","2026-05-12":"G1","2026-05-13":"G1","2026-05-14":"G1","2026-05-15":"G1","2026-05-18":"G1","2026-05-19":"G1","2026-05-20":"G1","2026-05-21":"G1","2026-05-22":"G1","2026-05-25":"G1","2026-05-26":"G1","2026-05-27":"G1","2026-05-28":"H","2026-05-29":"G1","2026-05-30":"O","2026-05-31":"O","2026-06-01":"G1","2026-06-02":"G1","2026-06-03":"G1","2026-06-04":"G1","2026-06-05":"G1","2026-06-08":"G1","2026-06-09":"G1","2026-06-10":"G1","2026-06-11":"G1","2026-06-12":"G1","2026-06-15":"G1","2026-06-16":"G1","2026-06-17":"G1","2026-06-18":"G1","2026-06-19":"G1","2026-06-22":"G1","2026-06-23":"G1","2026-06-24":"G1","2026-06-25":"G1","2026-06-26":"G1","2026-06-29":"G1","2026-06-30":"G1","2026-07-01":"G1","2026-07-02":"G1","2026-07-03":"G1"}},{"name":"Soniya Bondale","location":"Pune","email":"s.bondale@accenture.com","contact":"9405927600","schedule":{"2026-01-01":"H","2026-01-02":"G1","2026-01-05":"G1","2026-01-06":"G1","2026-01-07":"G1","2026-01-08":"G1","2026-01-09":"G1","2026-01-12":"M","2026-01-13":"M","2026-01-14":"M","2026-01-15":"H","2026-01-16":"M","2026-01-19":"M","2026-01-20":"M","2026-01-21":"M","2026-01-22":"M","2026-01-23":"M","2026-01-26":"H","2026-01-27":"N","2026-01-28":"N","2026-01-29":"N","2026-01-30":"N","2026-02-02":"D","2026-02-03":"D","2026-02-04":"D","2026-02-05":"D","2026-02-06":"D","2026-02-09":"D","2026-02-10":"D","2026-02-11":"D","2026-02-12":"D","2026-02-13":"D","2026-02-14":"O","2026-02-15":"O","2026-02-16":"G1","2026-02-17":"G1","2026-02-18":"G1","2026-02-19":"G1","2026-02-20":"G1","2026-02-23":"G1","2026-02-24":"G1","2026-02-25":"G1","2026-02-26":"G1","2026-02-27":"G1","2026-03-02":"L","2026-03-03":"H","2026-03-04":"L","2026-03-05":"L","2026-03-06":"G1","2026-03-09":"M","2026-03-10":"M","2026-03-11":"M","2026-03-12":"M","2026-03-13":"M","2026-03-16":"M","2026-03-17":"M","2026-03-18":"M","2026-03-19":"M","2026-03-20":"M","2026-03-22":"N","2026-03-23":"N","2026-03-24":"N","2026-03-25":"N","2026-03-26":"N","2026-03-27":"N","2026-03-30":"D","2026-03-31":"D","2026-04-01":"D","2026-04-02":"D","2026-04-03":"D","2026-04-06":"D","2026-04-07":"D","2026-04-08":"D","2026-04-09":"D","2026-04-10":"D","2026-04-13":"G1","2026-04-14":"G1","2026-04-15":"G1","2026-04-16":"G1","2026-04-17":"G1","2026-04-20":"G1","2026-04-21":"G1","2026-04-22":"G1","2026-04-23":"G1","2026-04-24":"G1","2026-04-25":"O","2026-04-26":"O","2026-04-27":"L","2026-04-28":"L","2026-04-29":"L","2026-04-30":"L","2026-05-01":"H","2026-05-04":"M","2026-05-05":"M","2026-05-06":"M","2026-05-07":"M","2026-05-08":"M","2026-05-11":"M","2026-05-12":"M","2026-05-13":"M","2026-05-14":"M","2026-05-15":"M","2026-05-18":"N","2026-05-19":"N","2026-05-20":"N","2026-05-21":"N","2026-05-22":"N","2026-05-25":"D","2026-05-26":"D","2026-05-27":"D","2026-05-28":"D","2026-05-29":"D","2026-06-01":"G1","2026-06-02":"G1","2026-06-03":"G1","2026-06-04":"G1","2026-06-05":"G1","2026-06-08":"G1","2026-06-09":"G1","2026-06-10":"G1","2026-06-11":"G1","2026-06-12":"G1","2026-06-15":"G1","2026-06-16":"G1","2026-06-17":"G1","2026-06-18":"G1","2026-06-19":"G1","2026-06-22":"M","2026-06-23":"M","2026-06-24":"M","2026-06-25":"M","2026-06-26":"M","2026-06-29":"M","2026-06-30":"M","2026-07-01":"M","2026-07-02":"M","2026-07-03":"M"}},{"name":"Akanksha Tubaji","location":"Pune","email":"a.hradaynath.dorale@accenture.com","contact":"9970519522","schedule":{"2026-01-01":"D","2026-01-02":"D","2026-01-05":"G1","2026-01-06":"G1","2026-01-07":"G1","2026-01-08":"G1","2026-01-09":"G1","2026-01-12":"G1","2026-01-13":"G1","2026-01-14":"G1","2026-01-15":"G1","2026-01-16":"G1","2026-01-17":"O","2026-01-18":"O","2026-01-19":"G1","2026-01-20":"G1","2026-01-21":"G1","2026-01-22":"G1","2026-01-23":"G1","2026-01-26":"H","2026-01-27":"M","2026-01-28":"M","2026-01-29":"M","2026-01-30":"M","2026-02-01":"N","2026-02-02":"N","2026-02-03":"N","2026-02-04":"N","2026-02-05":"N","2026-02-06":"N","2026-02-09":"D","2026-02-10":"D","2026-02-11":"D","2026-02-12":"D","2026-02-13":"D","2026-02-16":"D","2026-02-17":"D","2026-02-18":"D","2026-02-19":"D","2026-02-20":"D","2026-02-23":"G1","2026-02-24":"G1","2026-02-25":"G1","2026-02-26":"G1","2026-02-27":"G1","2026-03-02":"G1","2026-03-03":"G1","2026-03-04":"G1","2026-03-05":"L","2026-03-06":"G1","2026-03-09":"G1","2026-03-10":"G1","2026-03-11":"G1","2026-03-12":"G1","2026-03-13":"G1","2026-03-16":"M","2026-03-17":"M","2026-03-18":"M","2026-03-19":"M","2026-03-20":"M","2026-03-23":"M","2026-03-24":"M","2026-03-25":"M","2026-03-26":"M","2026-03-27":"M","2026-03-28":"O","2026-03-29":"O","2026-03-30":"N","2026-03-31":"N","2026-04-01":"N","2026-04-02":"N","2026-04-03":"N","2026-04-06":"D","2026-04-07":"D","2026-04-08":"D","2026-04-09":"D","2026-04-10":"D","2026-04-13":"G1","2026-04-14":"G1","2026-04-15":"G1","2026-04-16":"G1","2026-04-17":"G1","2026-04-20":"G1","2026-04-21":"G1","2026-04-22":"G1","2026-04-23":"G1","2026-04-24":"G1","2026-04-27":"G1","2026-04-28":"G1","2026-04-29":"G1","2026-04-30":"G1","2026-05-01":"H","2026-05-04":"G1","2026-05-05":"G1","2026-05-06":"G1","2026-05-07":"G1","2026-05-08":"G1","2026-05-11":"M","2026-05-12":"M","2026-05-13":"L","2026-05-14":"L","2026-05-15":"L","2026-05-18":"M","2026-05-19":"M","2026-05-20":"M","2026-05-21":"M","2026-05-22":"M","2026-05-25":"N","2026-05-26":"N","2026-05-27":"N","2026-05-28":"N","2026-05-29":"N","2026-06-01":"D","2026-06-02":"D","2026-06-03":"D","2026-06-04":"D","2026-06-05":"D","2026-06-06":"O","2026-06-07":"O","2026-06-08":"G1","2026-06-09":"G1","2026-06-10":"G1","2026-06-11":"G1","2026-06-12":"G1","2026-06-15":"G1","2026-06-16":"G1","2026-06-17":"G1","2026-06-18":"G1","2026-06-19":"G1","2026-06-22":"G1","2026-06-23":"G1","2026-06-24":"G1","2026-06-25":"G1","2026-06-26":"G1","2026-06-29":"M","2026-06-30":"M","2026-07-01":"M","2026-07-02":"M","2026-07-03":"M"}},{"name":"Amruta Narayanpure","location":"Pune","email":"amruta.narayanpure@accenture.com","contact":"8446366313","schedule":{"2026-01-01":"H","2026-01-02":"L","2026-01-05":"L","2026-01-06":"L","2026-01-07":"L","2026-01-08":"L","2026-01-09":"L","2026-01-10":"L","2026-01-11":"L","2026-01-12":"L","2026-01-13":"G1","2026-01-14":"G1","2026-01-15":"G1","2026-01-16":"G1","2026-01-19":"G1","2026-01-20":"G1","2026-01-21":"G1","2026-01-22":"G1","2026-01-23":"G1","2026-01-24":"O","2026-01-25":"O","2026-01-26":"G1","2026-01-27":"G1","2026-01-28":"G1","2026-01-29":"G1","2026-01-30":"G1","2026-02-02":"L","2026-02-03":"G1","2026-02-04":"G1","2026-02-05":"G1","2026-02-06":"G1","2026-02-09":"G1","2026-02-10":"G1","2026-02-11":"G1","2026-02-12":"G1","2026-02-13":"G1","2026-02-16":"G1","2026-02-17":"G1","2026-02-18":"G1","2026-02-19":"G1","2026-02-20":"G1","2026-02-23":"G1","2026-02-24":"G1","2026-02-25":"G1","2026-02-26":"G1","2026-02-27":"G1","2026-03-02":"G1","2026-03-03":"H","2026-03-04":"G1","2026-03-05":"G1","2026-03-06":"G1","2026-03-09":"G1","2026-03-10":"G1","2026-03-11":"G1","2026-03-12":"G1","2026-03-13":"G1","2026-03-16":"G1","2026-03-17":"G1","2026-03-18":"G1","2026-03-19":"G1","2026-03-20":"G1","2026-03-23":"G1","2026-03-24":"G1","2026-03-25":"G1","2026-03-26":"G1","2026-03-27":"G1","2026-03-30":"G1","2026-03-31":"G1","2026-04-01":"G1","2026-04-02":"G1","2026-04-03":"G1","2026-04-04":"O","2026-04-05":"O","2026-04-06":"G1","2026-04-07":"G1","2026-04-08":"G1","2026-04-09":"G1","2026-04-10":"G1","2026-04-13":"G1","2026-04-14":"G1","2026-04-15":"G1","2026-04-16":"G1","2026-04-17":"G1","2026-04-20":"G1","2026-04-21":"G1","2026-04-22":"G1","2026-04-23":"G1","2026-04-24":"G1","2026-04-27":"G1","2026-04-28":"G1","2026-04-29":"L","2026-04-30":"G1","2026-05-01":"G1","2026-05-04":"G1","2026-05-05":"G1","2026-05-06":"G1","2026-05-07":"G1","2026-05-08":"G1","2026-05-11":"G1","2026-05-12":"G1","2026-05-13":"G1","2026-05-14":"G1","2026-05-15":"G1","2026-05-18":"G1","2026-05-19":"G1","2026-05-20":"G1","2026-05-21":"G1","2026-05-22":"G1","2026-05-25":"L","2026-05-26":"L","2026-05-27":"G1","2026-05-28":"H","2026-05-29":"G1","2026-06-01":"G1","2026-06-02":"G1","2026-06-03":"G1","2026-06-04":"G1","2026-06-05":"G1","2026-06-08":"G1","2026-06-09":"G1","2026-06-10":"G1","2026-06-11":"G1","2026-06-12":"G1","2026-06-13":"O","2026-06-14":"O","2026-06-15":"G1","2026-06-16":"G1","2026-06-17":"G1","2026-06-18":"G1","2026-06-19":"G1","2026-06-22":"G1","2026-06-23":"G1","2026-06-24":"G1","2026-06-25":"G1","2026-06-26":"G1","2026-06-29":"L","2026-06-30":"G1","2026-07-01":"G1","2026-07-02":"G1","2026-07-03":"G1"}},{"name":"Shreya Deshbhushan","location":"Pune","email":"shreya.terdale@accenture.com","contact":"9766506906","schedule":{"2026-01-01":"M","2026-01-02":"M","2026-01-05":"M","2026-01-06":"M","2026-01-07":"M","2026-01-08":"M","2026-01-09":"M","2026-01-11":"N","2026-01-12":"N","2026-01-13":"N","2026-01-14":"N","2026-01-15":"N","2026-01-16":"N","2026-01-19":"D","2026-01-20":"D","2026-01-21":"D","2026-01-22":"D","2026-01-23":"D","2026-01-24":"O","2026-01-25":"O","2026-01-26":"G1","2026-01-27":"G1","2026-01-28":"G1","2026-01-29":"G1","2026-01-30":"G1","2026-02-02":"G1","2026-02-03":"G1","2026-02-04":"G1","2026-02-05":"G1","2026-02-06":"G1","2026-02-09":"G1","2026-02-10":"G1","2026-02-11":"G1","2026-02-12":"G1","2026-02-13":"G1","2026-02-16":"M","2026-02-17":"M","2026-02-18":"M","2026-02-19":"M","2026-02-20":"M","2026-02-23":"M","2026-02-24":"M","2026-02-25":"M","2026-02-26":"M","2026-02-27":"M","2026-03-01":"N","2026-03-02":"N","2026-03-03":"N","2026-03-04":"N","2026-03-05":"N","2026-03-06":"N","2026-03-09":"D","2026-03-10":"D","2026-03-11":"D","2026-03-12":"D","2026-03-13":"D","2026-03-16":"D","2026-03-17":"D","2026-03-18":"D","2026-03-19":"D","2026-03-20":"D","2026-03-23":"G1","2026-03-24":"G1","2026-03-25":"G1","2026-03-26":"G1","2026-03-27":"G1","2026-03-30":"G1","2026-03-31":"G1","2026-04-01":"G1","2026-04-02":"G1","2026-04-03":"G1","2026-04-04":"O","2026-04-05":"O","2026-04-06":"G1","2026-04-07":"G1","2026-04-08":"G1","2026-04-09":"G1","2026-04-10":"G1","2026-04-13":"M","2026-04-14":"M","2026-04-15":"M","2026-04-16":"M","2026-04-17":"M","2026-04-20":"M","2026-04-21":"M","2026-04-22":"M","2026-04-23":"M","2026-04-24":"M","2026-04-27":"M","2026-04-28":"M","2026-04-29":"M","2026-04-30":"M","2026-05-01":"M","2026-05-04":"N","2026-05-05":"N","2026-05-06":"N","2026-05-07":"N","2026-05-08":"N","2026-05-11":"D","2026-05-12":"D","2026-05-13":"D","2026-05-14":"D","2026-05-15":"D","2026-05-18":"G1","2026-05-19":"G1","2026-05-20":"G1","2026-05-21":"G1","2026-05-22":"G1","2026-05-25":"G1","2026-05-26":"G1","2026-05-27":"G1","2026-05-28":"H","2026-05-29":"G1","2026-06-01":"G1","2026-06-02":"G1","2026-06-03":"G1","2026-06-04":"G1","2026-06-05":"G1","2026-06-08":"M","2026-06-09":"M","2026-06-10":"M","2026-06-11":"M","2026-06-12":"M","2026-06-13":"O","2026-06-14":"O","2026-06-15":"M","2026-06-16":"M","2026-06-17":"M","2026-06-18":"M","2026-06-19":"M","2026-06-21":"N","2026-06-22":"N","2026-06-23":"N","2026-06-24":"N","2026-06-25":"N","2026-06-26":"N","2026-06-29":"D","2026-06-30":"D","2026-07-01":"D","2026-07-02":"D","2026-07-03":"D"}},{"name":"Lavanya Bade","location":"","email":"lavanya.bade@accenture.com","contact":"9542629165","schedule":{"2026-01-01":"G1","2026-01-02":"G1","2026-01-05":"G1","2026-01-06":"G1","2026-01-07":"G1","2026-01-08":"G1","2026-01-09":"G1","2026-01-12":"L","2026-01-13":"L","2026-01-14":"L","2026-01-15":"H","2026-01-16":"L","2026-01-19":"G1","2026-01-20":"G1","2026-01-21":"G1","2026-01-22":"G1","2026-01-23":"G1","2026-01-26":"H","2026-01-27":"G1","2026-01-28":"G1","2026-01-29":"G1","2026-01-30":"G1","2026-02-02":"G1","2026-02-03":"G1","2026-02-04":"G1","2026-02-05":"G1","2026-02-06":"G1","2026-02-09":"G1","2026-02-10":"G1","2026-02-11":"G1","2026-02-12":"G1","2026-02-13":"G1","2026-02-16":"G1","2026-02-17":"G1","2026-02-18":"G1","2026-02-19":"G1","2026-02-20":"G1","2026-02-23":"G1","2026-02-24":"G1","2026-02-25":"G1","2026-02-26":"G1","2026-02-27":"G1","2026-03-02":"G1","2026-03-03":"G1","2026-03-04":"G1","2026-03-05":"G1","2026-03-06":"G1","2026-03-09":"G1","2026-03-10":"G1","2026-03-11":"G1","2026-03-12":"G1","2026-03-13":"G1","2026-03-16":"G1","2026-03-17":"G1","2026-03-18":"G1","2026-03-19":"G1","2026-03-20":"G1","2026-03-23":"G1","2026-03-24":"G1","2026-03-25":"G1","2026-03-26":"G1","2026-06-08":"G1","2026-06-09":"G1","2026-06-10":"G1","2026-06-11":"G1","2026-06-12":"G1","2026-06-15":"G1","2026-06-16":"G1","2026-06-17":"G1","2026-06-18":"G1","2026-06-19":"G1"}},{"name":"Vikas Maurya","location":"Gurugram","email":"vikas.a.maurya@accenture.com","contact":"9793106098","schedule":{"2026-01-01":"H","2026-01-02":"D","2026-01-05":"G1","2026-01-06":"G1","2026-01-07":"G1","2026-01-08":"G1","2026-01-09":"G1","2026-01-12":"G1","2026-01-13":"G1","2026-01-14":"G1","2026-01-15":"G1","2026-01-16":"G1","2026-01-19":"G1","2026-01-20":"G1","2026-01-21":"G1","2026-01-22":"G1","2026-01-23":"G1","2026-01-26":"M","2026-01-27":"M","2026-01-28":"M","2026-01-29":"M","2026-01-30":"M","2026-02-02":"M","2026-02-03":"M","2026-02-04":"M","2026-02-05":"M","2026-02-06":"M","2026-02-07":"O","2026-02-08":"O","2026-02-09":"N","2026-02-10":"N","2026-02-11":"N","2026-02-12":"N","2026-02-13":"N","2026-02-16":"D","2026-02-17":"D","2026-02-18":"D","2026-02-19":"D","2026-02-20":"D","2026-02-23":"G1","2026-02-24":"G1","2026-02-25":"G1","2026-02-26":"G1","2026-02-27":"G1","2026-03-02":"G1","2026-03-03":"G1","2026-03-04":"H","2026-03-05":"G1","2026-03-06":"G1","2026-03-09":"G1","2026-03-10":"G1","2026-03-11":"G1","2026-03-12":"G1","2026-03-13":"G1","2026-03-16":"G1","2026-03-17":"G1","2026-03-18":"G1","2026-03-19":"G1","2026-03-20":"G1","2026-03-23":"M","2026-03-24":"M","2026-03-25":"M","2026-03-26":"M","2026-03-27":"M","2026-03-30":"M","2026-03-31":"M","2026-04-01":"M","2026-04-02":"M","2026-04-03":"M","2026-04-05":"N","2026-04-06":"N","2026-04-07":"N","2026-04-08":"N","2026-04-09":"N","2026-04-10":"N","2026-04-13":"D","2026-04-14":"D","2026-04-15":"D","2026-04-16":"D","2026-04-17":"D","2026-04-18":"O","2026-04-19":"O","2026-04-20":"G1","2026-04-21":"G1","2026-04-22":"G1","2026-04-23":"G1","2026-04-24":"G1","2026-04-27":"G1","2026-04-28":"G1","2026-04-29":"G1","2026-04-30":"G1","2026-05-01":"G1","2026-05-04":"G1","2026-05-05":"G1","2026-05-06":"G1","2026-05-07":"G1","2026-05-08":"G1","2026-05-11":"G1","2026-05-12":"G1","2026-05-13":"G1","2026-05-14":"G1","2026-05-15":"G1","2026-05-18":"M","2026-05-19":"M","2026-05-20":"M","2026-05-21":"M","2026-05-22":"M","2026-05-25":"M","2026-05-26":"M","2026-05-27":"H","2026-05-28":"M","2026-05-29":"M","2026-06-01":"N","2026-06-02":"N","2026-06-03":"N","2026-06-04":"N","2026-06-05":"N","2026-06-08":"D","2026-06-09":"D","2026-06-10":"D","2026-06-11":"D","2026-06-12":"D","2026-06-15":"D","2026-06-16":"D","2026-06-17":"D","2026-06-18":"D","2026-06-19":"D","2026-06-22":"G1","2026-06-23":"G1","2026-06-24":"G1","2026-06-25":"G1","2026-06-26":"G1","2026-06-29":"G1","2026-06-30":"G1","2026-07-01":"G1","2026-07-02":"G1","2026-07-03":"G1"}},{"name":"Revathi kurapati","location":"Pune","email":"kurapati.revathi@accenture.com","contact":"8074404415","schedule":{"2026-01-01":"H","2026-01-02":"M","2026-01-04":"N","2026-01-05":"N","2026-01-06":"N","2026-01-07":"N","2026-01-08":"N","2026-01-09":"N","2026-01-12":"D","2026-01-13":"D","2026-01-14":"D","2026-01-15":"D","2026-01-16":"D","2026-01-19":"G1","2026-01-20":"G1","2026-01-21":"G1","2026-01-22":"G1","2026-01-23":"G1","2026-01-26":"G1","2026-01-27":"G1","2026-01-28":"G1","2026-01-29":"G1","2026-01-30":"G1","2026-02-02":"G1","2026-02-03":"G1","2026-02-04":"G1","2026-02-05":"G1","2026-02-06":"G1","2026-02-09":"M","2026-02-10":"M","2026-02-11":"M","2026-02-12":"M","2026-02-13":"M","2026-02-16":"M","2026-02-17":"M","2026-02-18":"M","2026-02-19":"M","2026-02-20":"M","2026-02-21":"O","2026-02-22":"O","2026-02-23":"N","2026-02-24":"N","2026-02-25":"N","2026-02-26":"N","2026-02-27":"N","2026-03-02":"D","2026-03-03":"H","2026-03-04":"D","2026-03-05":"D","2026-03-06":"D","2026-03-09":"D","2026-03-10":"D","2026-03-11":"D","2026-03-12":"D","2026-03-13":"D","2026-03-16":"G1","2026-03-17":"G1","2026-03-18":"G1","2026-03-19":"G1","2026-03-20":"G1","2026-03-23":"G1","2026-03-24":"G1","2026-03-25":"G1","2026-03-26":"G1","2026-03-27":"G1","2026-03-30":"M","2026-03-31":"M","2026-04-01":"M","2026-04-02":"M","2026-04-03":"M","2026-04-06":"M","2026-04-07":"M","2026-04-08":"M","2026-04-09":"M","2026-04-10":"M","2026-04-12":"N","2026-04-13":"N","2026-04-14":"N","2026-04-15":"N","2026-04-16":"N","2026-04-17":"N","2026-04-20":"L","2026-04-21":"L","2026-04-22":"L","2026-04-23":"L","2026-04-24":"L","2026-04-27":"L","2026-04-28":"L","2026-04-29":"L","2026-04-30":"L","2026-05-01":"H","2026-05-04":"L","2026-05-05":"L","2026-05-06":"L","2026-05-07":"L","2026-05-08":"L","2026-05-11":"L","2026-05-12":"G1","2026-05-13":"G1","2026-05-14":"G1","2026-05-15":"G1","2026-05-16":"O","2026-05-17":"O","2026-05-18":"M","2026-05-19":"M","2026-05-20":"M","2026-05-21":"M","2026-05-22":"M","2026-05-25":"M","2026-05-26":"M","2026-05-27":"M","2026-05-28":"M","2026-05-29":"M","2026-05-31":"N","2026-06-01":"N","2026-06-02":"N","2026-06-03":"N","2026-06-04":"N","2026-06-05":"N","2026-06-08":"D","2026-06-09":"D","2026-06-10":"D","2026-06-11":"D","2026-06-12":"D","2026-06-15":"G1","2026-06-16":"G1","2026-06-17":"G1","2026-06-18":"G1","2026-06-19":"G1","2026-06-22":"G1","2026-06-23":"G1","2026-06-24":"G1","2026-06-25":"G1","2026-06-26":"G1","2026-06-29":"G1","2026-06-30":"G1","2026-07-01":"G1","2026-07-02":"G1","2026-07-03":"G1"}},{"name":"aswini Mupparaju","location":"Bangalore","email":"aswini.mupparaju@accenture.com","contact":"8861551442","schedule":{"2026-01-01":"N","2026-01-02":"N","2026-01-05":"D","2026-01-06":"D","2026-01-07":"D","2026-01-08":"D","2026-01-09":"L","2026-01-12":"L","2026-01-13":"L","2026-01-14":"L","2026-01-15":"H","2026-01-16":"L","2026-01-19":"G1","2026-01-20":"G1","2026-01-21":"G1","2026-01-22":"G1","2026-01-23":"G1","2026-01-26":"H","2026-01-27":"G1","2026-01-28":"G1","2026-01-29":"G1","2026-01-30":"G1","2026-02-02":"G1","2026-02-03":"G1","2026-02-04":"G1","2026-02-05":"G1","2026-02-06":"G1","2026-02-09":"M","2026-02-10":"M","2026-02-11":"M","2026-02-12":"M","2026-02-13":"M","2026-02-16":"M","2026-02-17":"M","2026-02-18":"M","2026-02-19":"M","2026-02-20":"M","2026-02-21":"O","2026-02-22":"O","2026-02-23":"N","2026-02-24":"N","2026-02-25":"N","2026-02-26":"N","2026-02-27":"N","2026-03-02":"D","2026-03-03":"D","2026-03-04":"D","2026-03-05":"D","2026-03-06":"D","2026-03-09":"G1","2026-03-10":"G1","2026-03-11":"G1","2026-03-12":"G1","2026-03-13":"G1","2026-03-16":"G1","2026-03-17":"G1","2026-03-18":"G1","2026-03-19":"L","2026-03-20":"G1","2026-03-23":"G1","2026-03-24":"G1","2026-03-25":"G1","2026-03-26":"G1","2026-03-27":"G1","2026-03-30":"G1","2026-03-31":"G1","2026-04-01":"G1","2026-04-02":"G1","2026-04-03":"G1","2026-04-06":"M","2026-04-07":"M","2026-04-08":"M","2026-04-09":"M","2026-04-10":"M","2026-04-13":"M","2026-04-14":"M","2026-04-15":"M","2026-04-16":"M","2026-04-17":"M","2026-04-19":"N","2026-04-20":"N","2026-04-21":"N","2026-04-22":"N","2026-04-23":"N","2026-04-24":"N","2026-04-27":"D","2026-04-28":"D","2026-04-29":"D","2026-04-30":"D","2026-05-01":"H","2026-05-02":"O","2026-05-03":"O","2026-05-04":"G1","2026-05-05":"G1","2026-05-06":"G1","2026-05-07":"G1","2026-05-08":"G1","2026-05-11":"G1","2026-05-12":"G1","2026-05-13":"G1","2026-05-14":"G1","2026-05-15":"G1","2026-05-18":"G1","2026-05-19":"G1","2026-05-20":"G1","2026-05-21":"G1","2026-05-22":"G1","2026-05-25":"G1","2026-05-26":"G1","2026-05-27":"G1","2026-05-28":"G1","2026-05-29":"G1","2026-06-01":"M","2026-06-02":"M","2026-06-03":"M","2026-06-04":"M","2026-06-05":"M","2026-06-08":"M","2026-06-09":"M","2026-06-10":"M","2026-06-11":"M","2026-06-12":"M","2026-06-15":"N","2026-06-16":"N","2026-06-17":"N","2026-06-18":"N","2026-06-19":"N","2026-06-22":"D","2026-06-23":"D","2026-06-24":"D","2026-06-25":"D","2026-06-26":"D","2026-06-29":"G1","2026-06-30":"G1","2026-07-01":"G1","2026-07-02":"G1","2026-07-03":"G1"}},{"name":"Anusha Narsepalli","location":"Pune","email":"anusha.narsepalli@accenture.com","contact":"9172341357","schedule":{"2026-01-01":"G1","2026-01-02":"G1","2026-01-05":"M","2026-01-06":"M","2026-01-07":"M","2026-01-08":"M","2026-01-09":"M","2026-01-12":"M","2026-01-13":"M","2026-01-14":"M","2026-01-15":"M","2026-01-16":"M","2026-01-19":"N","2026-01-20":"N","2026-01-21":"N","2026-01-22":"N","2026-01-23":"N","2026-01-26":"D","2026-01-27":"D","2026-01-28":"D","2026-01-29":"D","2026-01-30":"D","2026-02-02":"G1","2026-02-03":"G1","2026-02-04":"G1","2026-02-05":"G1","2026-02-06":"G1","2026-02-07":"O","2026-02-08":"O","2026-02-09":"G1","2026-02-10":"G1","2026-02-11":"G1","2026-02-12":"G1","2026-02-13":"G1","2026-02-16":"G1","2026-02-17":"G1","2026-02-18":"G1","2026-02-19":"G1","2026-02-20":"G1","2026-02-23":"M","2026-02-24":"M","2026-02-25":"M","2026-02-26":"M","2026-02-27":"M","2026-03-02":"M","2026-03-03":"H","2026-03-04":"M","2026-03-05":"M","2026-03-06":"M","2026-03-09":"N","2026-03-10":"N","2026-03-11":"N","2026-03-12":"N","2026-03-13":"N","2026-03-16":"D","2026-03-17":"D","2026-03-18":"D","2026-03-19":"L","2026-03-20":"D","2026-03-23":"G1","2026-03-24":"G1","2026-03-25":"G1","2026-03-26":"G1","2026-03-27":"G1","2026-03-30":"G1","2026-03-31":"G1","2026-04-01":"G1","2026-04-02":"G1","2026-04-03":"G1","2026-04-06":"G1","2026-04-07":"G1","2026-04-08":"G1","2026-04-09":"G1","2026-04-10":"G1","2026-04-13":"M","2026-04-14":"M","2026-04-15":"M","2026-04-16":"M","2026-04-17":"M","2026-04-18":"O","2026-04-19":"O","2026-04-20":"M","2026-04-21":"M","2026-04-22":"M","2026-04-23":"M","2026-04-24":"M","2026-04-27":"N","2026-04-28":"N","2026-04-29":"N","2026-04-30":"N","2026-05-01":"N","2026-05-04":"D","2026-05-05":"D","2026-05-06":"D","2026-05-07":"D","2026-05-08":"D","2026-05-11":"G1","2026-05-12":"G1","2026-05-13":"G1","2026-05-14":"G1","2026-05-15":"G1","2026-05-18":"L","2026-05-19":"L","2026-05-20":"L","2026-05-21":"G1","2026-05-22":"G1","2026-05-25":"G1","2026-05-26":"G1","2026-05-27":"G1","2026-05-28":"H","2026-05-29":"G1","2026-06-01":"G1","2026-06-02":"G1","2026-06-03":"G1","2026-06-04":"G1","2026-06-05":"G1","2026-06-08":"M","2026-06-09":"M","2026-06-10":"M","2026-06-11":"M","2026-06-12":"M","2026-06-15":"M","2026-06-16":"M","2026-06-17":"M","2026-06-18":"M","2026-06-19":"M","2026-06-22":"N","2026-06-23":"N","2026-06-24":"N","2026-06-25":"N","2026-06-26":"N","2026-06-29":"D","2026-06-30":"D","2026-07-01":"D","2026-07-02":"D","2026-07-03":"D"}},{"name":"Dhruv Agarwal","location":"Pune","email":"dhruv.g.agarwal@accenture.com","contact":"9412462974","schedule":{"2026-01-01":"G1","2026-01-02":"G1","2026-01-05":"M","2026-01-06":"M","2026-01-07":"M","2026-01-08":"M","2026-01-09":"M","2026-01-12":"M","2026-01-13":"M","2026-01-14":"M","2026-01-15":"M","2026-01-16":"M","2026-01-18":"N","2026-01-19":"N","2026-01-20":"N","2026-01-21":"N","2026-01-22":"N","2026-01-23":"N","2026-01-26":"H","2026-01-27":"D","2026-01-28":"D","2026-01-29":"D","2026-01-30":"D","2026-02-02":"D","2026-02-03":"D","2026-02-04":"D","2026-02-05":"D","2026-02-06":"D","2026-02-09":"G1","2026-02-10":"G1","2026-02-11":"G1","2026-02-12":"G1","2026-02-13":"G1","2026-02-16":"G1","2026-02-17":"G1","2026-02-18":"G1","2026-02-19":"G1","2026-02-20":"G1","2026-02-23":"G1","2026-02-24":"G1","2026-02-25":"G1","2026-02-26":"G1","2026-02-27":"G1","2026-02-28":"O","2026-03-01":"O","2026-03-02":"M","2026-03-03":"M","2026-03-04":"M","2026-03-05":"M","2026-03-06":"M","2026-03-09":"M","2026-03-10":"M","2026-03-11":"M","2026-03-12":"M","2026-03-13":"M","2026-03-15":"N","2026-03-16":"N","2026-03-17":"N","2026-03-18":"N","2026-03-19":"N","2026-03-20":"N","2026-03-23":"D","2026-03-24":"D","2026-03-25":"D","2026-03-26":"D","2026-03-27":"D","2026-03-30":"G1","2026-03-31":"G1","2026-04-01":"G1","2026-04-02":"G1","2026-04-03":"G1","2026-04-06":"G1","2026-04-07":"G1","2026-04-08":"L","2026-04-09":"L","2026-04-10":"L","2026-04-13":"L","2026-04-14":"L","2026-04-15":"G1","2026-04-16":"G1","2026-04-17":"G1","2026-04-20":"M","2026-04-21":"M","2026-04-22":"M","2026-04-23":"M","2026-04-24":"M","2026-04-26":"N","2026-04-27":"N","2026-04-28":"N","2026-04-29":"N","2026-04-30":"N","2026-05-01":"N","2026-05-02":"O","2026-05-03":"O","2026-05-04":"D","2026-05-05":"D","2026-05-06":"D","2026-05-07":"D","2026-05-08":"D","2026-05-11":"G1","2026-05-12":"G1","2026-05-13":"G1","2026-05-14":"G1","2026-05-15":"G1","2026-05-18":"G1","2026-05-19":"G1","2026-05-20":"G1","2026-05-21":"G1","2026-05-22":"G1","2026-05-25":"G1","2026-05-26":"G1","2026-05-27":"G1","2026-05-28":"H","2026-05-29":"G1","2026-06-01":"M","2026-06-02":"M","2026-06-03":"M","2026-06-04":"M","2026-06-05":"M","2026-06-08":"M","2026-06-09":"M","2026-06-10":"M","2026-06-11":"M","2026-06-12":"M","2026-06-14":"N","2026-06-15":"N","2026-06-16":"N","2026-06-17":"N","2026-06-18":"N","2026-06-19":"L","2026-06-22":"L","2026-06-23":"L","2026-06-24":"D","2026-06-25":"D","2026-06-26":"D","2026-06-29":"D","2026-06-30":"D","2026-07-01":"D","2026-07-02":"D","2026-07-03":"D"}},{"name":"Shivam G Gundale","location":"Pune","email":"shivam.gundale@accenture.com","contact":"9172724884","schedule":{"2026-01-01":"D","2026-01-02":"D","2026-01-03":"O","2026-01-04":"O","2026-01-05":"D","2026-01-06":"D","2026-01-07":"D","2026-01-08":"D","2026-01-09":"D","2026-01-12":"G1","2026-01-13":"G1","2026-01-14":"G1","2026-01-15":"G1","2026-01-16":"G1","2026-01-19":"G1","2026-01-20":"G1","2026-01-21":"G1","2026-01-22":"G1","2026-01-23":"G1","2026-01-26":"H","2026-01-27":"G1","2026-01-28":"G1","2026-01-29":"G1","2026-01-30":"G1","2026-02-02":"M","2026-02-03":"M","2026-02-04":"M","2026-02-05":"M","2026-02-06":"M","2026-02-09":"M","2026-02-10":"M","2026-02-11":"M","2026-02-12":"M","2026-02-13":"M","2026-02-16":"N","2026-02-17":"N","2026-02-18":"N","2026-02-19":"N","2026-02-20":"N","2026-02-23":"D","2026-02-24":"D","2026-02-25":"D","2026-02-26":"D","2026-02-27":"D","2026-03-02":"D","2026-03-03":"H","2026-03-04":"D","2026-03-05":"D","2026-03-06":"D","2026-03-09":"G1","2026-03-10":"G1","2026-03-11":"G1","2026-03-12":"G1","2026-03-13":"G1","2026-03-16":"G1","2026-03-17":"G1","2026-03-18":"G1","2026-03-19":"G1","2026-03-20":"G1","2026-03-21":"O","2026-03-22":"O","2026-03-23":"M","2026-03-24":"M","2026-03-25":"M","2026-03-26":"M","2026-03-27":"M","2026-03-30":"M","2026-03-31":"M","2026-04-01":"M","2026-04-02":"M","2026-04-03":"M","2026-04-06":"N","2026-04-07":"N","2026-04-08":"N","2026-04-09":"N","2026-04-10":"N","2026-04-13":"D","2026-04-14":"D","2026-04-15":"D","2026-04-16":"D","2026-04-17":"D","2026-04-20":"D","2026-04-21":"D","2026-04-22":"D","2026-04-23":"D","2026-04-24":"D","2026-04-27":"G1","2026-04-28":"G1","2026-04-29":"G1","2026-04-30":"G1","2026-05-01":"G1","2026-05-04":"G1","2026-05-05":"G1","2026-05-06":"G1","2026-05-07":"G1","2026-05-08":"G1","2026-05-11":"M","2026-05-12":"M","2026-05-13":"M","2026-05-14":"M","2026-05-15":"M","2026-05-18":"M","2026-05-19":"M","2026-05-20":"M","2026-05-21":"M","2026-05-22":"M","2026-05-24":"N","2026-05-25":"N","2026-05-26":"N","2026-05-27":"N","2026-05-28":"N","2026-05-29":"N","2026-06-01":"D","2026-06-02":"D","2026-06-03":"D","2026-06-04":"D","2026-06-05":"D","2026-06-06":"O","2026-06-07":"O","2026-06-08":"D","2026-06-09":"D","2026-06-10":"D","2026-06-11":"D","2026-06-12":"L","2026-06-15":"L","2026-06-16":"L","2026-06-17":"L","2026-06-18":"L","2026-06-19":"L","2026-06-22":"G1","2026-06-23":"G1","2026-06-24":"G1","2026-06-25":"G1","2026-06-26":"G1","2026-06-29":"M","2026-06-30":"M","2026-07-01":"M","2026-07-02":"M","2026-07-03":"M"}},{"name":"Sateesh Kumar","location":"Hyderabad","email":"sateesh.k.kuchipudi@accenture.com","contact":"+919553498972","schedule":{"2026-01-01":"H","2026-01-02":"G1","2026-01-05":"G1","2026-01-06":"G1","2026-01-07":"G1","2026-01-08":"G1","2026-01-09":"G1","2026-01-12":"L","2026-01-13":"L","2026-01-14":"L","2026-01-15":"H","2026-01-16":"L","2026-01-19":"M","2026-01-20":"M","2026-01-21":"M","2026-01-22":"M","2026-01-23":"M","2026-01-26":"M","2026-01-27":"M","2026-01-28":"M","2026-01-29":"M","2026-01-30":"M","2026-02-02":"M","2026-02-03":"M","2026-02-04":"M","2026-02-05":"M","2026-02-06":"M","2026-02-08":"N","2026-02-09":"N","2026-02-10":"N","2026-02-11":"N","2026-02-12":"N","2026-02-13":"N","2026-02-16":"D","2026-02-17":"D","2026-02-18":"D","2026-02-19":"D","2026-02-20":"D","2026-02-23":"D","2026-02-24":"D","2026-02-25":"D","2026-02-26":"D","2026-02-27":"D","2026-03-02":"G1","2026-03-03":"G1","2026-03-04":"G1","2026-03-05":"G1","2026-03-06":"G1","2026-03-07":"O","2026-03-08":"O","2026-03-09":"G1","2026-03-10":"G1","2026-03-11":"G1","2026-03-12":"G1","2026-03-13":"G1","2026-03-16":"M","2026-03-17":"M","2026-03-18":"M","2026-03-19":"M","2026-03-20":"M","2026-03-23":"M","2026-03-24":"M","2026-03-25":"M","2026-03-26":"M","2026-03-27":"M","2026-03-29":"N","2026-03-30":"N","2026-03-31":"N","2026-04-01":"N","2026-04-02":"N","2026-04-03":"N","2026-04-06":"D","2026-04-07":"D","2026-04-08":"D","2026-04-09":"D","2026-04-10":"D","2026-04-13":"D","2026-04-14":"D","2026-04-15":"D","2026-04-16":"D","2026-04-17":"D","2026-04-20":"G1","2026-04-21":"G1","2026-04-22":"G1","2026-04-23":"G1","2026-04-24":"G1","2026-04-27":"G1","2026-04-28":"G1","2026-04-29":"G1","2026-04-30":"G1","2026-05-01":"H","2026-05-04":"M","2026-05-05":"M","2026-05-06":"M","2026-05-07":"M","2026-05-08":"M","2026-05-09":"O","2026-05-10":"O","2026-05-11":"M","2026-05-12":"M","2026-05-13":"M","2026-05-14":"M","2026-05-15":"M","2026-05-17":"N","2026-05-18":"N","2026-05-19":"N","2026-05-20":"N","2026-05-21":"N","2026-05-22":"N","2026-05-25":"D","2026-05-26":"D","2026-05-27":"D","2026-05-28":"D","2026-05-29":"D","2026-06-01":"D","2026-06-02":"H","2026-06-03":"R","2026-06-04":"R","2026-06-05":"R","2026-06-06":"R","2026-06-07":"R","2026-06-08":"R","2026-06-09":"R","2026-06-10":"R","2026-06-11":"R","2026-06-12":"R","2026-06-13":"R","2026-06-14":"R","2026-06-15":"R","2026-06-16":"R","2026-06-17":"R","2026-06-18":"R","2026-06-19":"R","2026-06-20":"R","2026-06-21":"R","2026-06-22":"R","2026-06-23":"R","2026-06-24":"R","2026-06-25":"R","2026-06-26":"R","2026-06-29":"R","2026-06-30":"R","2026-07-01":"R","2026-07-02":"R","2026-07-03":"R"}},{"name":"Tanya Aggarwal","location":"Gurugram","email":"tanya.a.aggarwal@accenture.com","contact":"8171282801","schedule":{"2026-05-04":"D","2026-05-05":"D","2026-05-06":"D","2026-05-07":"D","2026-05-08":"D","2026-05-11":"D","2026-05-12":"D","2026-05-13":"D","2026-05-14":"D","2026-05-15":"D","2026-05-18":"D","2026-05-19":"D","2026-05-20":"D","2026-05-21":"D","2026-05-22":"D","2026-05-25":"G1","2026-05-26":"G1","2026-05-27":"M","2026-05-28":"G1","2026-05-29":"G1","2026-06-01":"G1","2026-06-02":"G1","2026-06-03":"G1","2026-06-04":"G1","2026-06-05":"G1","2026-06-08":"G1","2026-06-09":"G1","2026-06-10":"G1","2026-06-11":"G1","2026-06-12":"G1","2026-06-15":"G1","2026-06-16":"G1","2026-06-17":"G1","2026-06-18":"G1","2026-06-19":"G1","2026-06-22":"M","2026-06-23":"M","2026-06-24":"M","2026-06-25":"M","2026-06-26":"M","2026-06-27":"O","2026-06-28":"O","2026-06-29":"M","2026-06-30":"M","2026-07-01":"M","2026-07-02":"M","2026-07-03":"M"}},{"name":"Vinay","location":"Hyderabad","email":"","contact":"","schedule":{"2026-05-15":"G1","2026-05-18":"G1","2026-05-19":"G1","2026-05-20":"G1","2026-05-21":"G1","2026-05-22":"G1","2026-05-25":"G1","2026-05-26":"G1","2026-05-27":"H","2026-05-28":"G1","2026-05-29":"G1","2026-06-01":"G1","2026-06-02":"G1","2026-06-03":"G1","2026-06-04":"G1","2026-06-05":"G1","2026-06-08":"G1","2026-06-09":"G1","2026-06-10":"G1","2026-06-11":"G1","2026-06-12":"G1","2026-06-15":"G1","2026-06-16":"G1","2026-06-17":"G1","2026-06-18":"G1","2026-06-19":"G1","2026-06-22":"G1","2026-06-23":"G1","2026-06-24":"G1","2026-06-25":"G1","2026-06-26":"G1","2026-06-29":"R","2026-06-30":"R","2026-07-01":"R","2026-07-02":"R","2026-07-03":"R"}}];
 
-let weekOffset = 0;
-
-// Load from localStorage or use demo data
-let staff = JSON.parse(localStorage.getItem('roster_staff') || 'null') || [
-  {id:1,name:'Alice Nguyen',role:'Head Chef',dept:'Kitchen',schedule:{0:'morning',1:'morning',2:'morning',3:'off',4:'morning',5:'morning',6:'off'}},
-  {id:2,name:'Ben Carter',role:'Sous Chef',dept:'Kitchen',schedule:{0:'morning',1:'morning',2:'off',3:'morning',4:'morning',5:'evening',6:'evening'}},
-  {id:3,name:'Clara Smith',role:'Server',dept:'Front of house',schedule:{0:'evening',1:'evening',2:'evening',3:'evening',4:'off',5:'evening',6:'morning'}},
-  {id:4,name:'David Lee',role:'Bartender',dept:'Bar',schedule:{0:'night',1:'night',2:'off',3:'night',4:'night',5:'night',6:'night'}},
-  {id:5,name:'Emma Patel',role:'Manager',dept:'Management',schedule:{0:'morning',1:'morning',2:'morning',3:'morning',4:'morning',5:'off',6:'off'}},
-  {id:6,name:'Felix Wong',role:'Host',dept:'Front of house',schedule:{0:'off',1:'evening',2:'evening',3:'evening',4:'evening',5:'morning',6:'morning'}},
+const ONCALL = [
+  {p1:'Prajol',p2:'Kriti',slots:[1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1]},
+  {p1:'Divya',p2:'Tanya',slots:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]},
+  {p1:'Vikas',p2:'Anusha',slots:[0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0]},
+  {p1:'Qainaat',p2:'Soniya',slots:[0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0]},
+  {p1:'Aswini',p2:'Revathi',slots:[0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0]},
+  {p1:'Nitesh',p2:'Dhruv',slots:[0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0]},
+  {p1:'Adi',p2:'Shivam',slots:[0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0]},
+  {p1:'Vaishnavi',p2:'Nishant',slots:[0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0]},
+  {p1:'Jayant',p2:'Akanksha',slots:[0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0]},
+  {p1:'Amruta',p2:'Shreya',slots:[0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0]},
 ];
-let nextId = Math.max(...staff.map(s=>s.id), 0) + 1;
 
-function save() {
-  localStorage.setItem('roster_staff', JSON.stringify(staff));
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug'];
+let weekOffset = 0;
+let activeTab = 'shifts';
+
+function switchTab(tab, el) {
+  activeTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-shifts').style.display = tab==='shifts'?'':'none';
+  document.getElementById('tab-oncall').style.display = tab==='oncall'?'':'none';
+  if(tab==='oncall') renderOncall();
 }
 
 function getWeekDates() {
   const today = new Date();
   const day = today.getDay();
   const mon = new Date(today);
-  mon.setDate(today.getDate() - (day===0 ? 6 : day-1) + weekOffset*7);
-  return DAYS.map((_,i) => { const d = new Date(mon); d.setDate(mon.getDate()+i); return d; });
+  mon.setDate(today.getDate() - (day===0?6:day-1) + weekOffset*7);
+  const dates = [];
+  for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);dates.push(d);}
+  return dates;
 }
 
-function fmtDate(d) { return `${d.getDate()}/${d.getMonth()+1}`; }
-function changeWeek(dir) { weekOffset += dir; renderGrid(); }
+function fmtDate(d){return d.getDate()+'/'+(d.getMonth()+1);}
+function fmtKey(d){return d.toISOString().slice(0,10);}
+function changeWeek(dir){weekOffset+=dir;renderGrid();}
 
-function getFiltered() {
-  const s = document.getElementById('searchInput').value.toLowerCase();
-  const dept = document.getElementById('deptFilter').value;
-  const sf = document.getElementById('shiftFilter').value;
-  return staff.filter(p => {
-    if (s && !p.name.toLowerCase().includes(s) && !p.role.toLowerCase().includes(s)) return false;
-    if (dept && p.dept !== dept) return false;
-    if (sf && !Object.values(p.schedule).includes(sf)) return false;
+function getFiltered(){
+  const s=document.getElementById('searchInput').value.toLowerCase().trim();
+  const loc=document.getElementById('locFilter').value;
+  const sf=document.getElementById('shiftFilter').value;
+  return STAFF.filter(p=>{
+    if(s && !p.name.toLowerCase().includes(s)) return false;
+    if(loc && p.location!==loc) return false;
+    if(sf && !Object.values(p.schedule).includes(sf)) return false;
     return true;
   });
 }
 
-function renderGrid() {
-  const dates = getWeekDates();
-  const mon = dates[0], sun = dates[6];
-  document.getElementById('weekLabel').textContent = `${fmtDate(mon)} – ${fmtDate(sun)} ${sun.getFullYear()}`;
-  const filtered = getFiltered();
+function renderGrid(){
+  const dates=getWeekDates();
+  const mon=dates[0],sun=dates[6];
+  document.getElementById('weekLabel').textContent=
+    DAYS[mon.getDay()]+' '+fmtDate(mon)+' – '+DAYS[sun.getDay()]+' '+fmtDate(sun)+' '+sun.getFullYear();
+  const filtered=getFiltered();
+  const counts={G1:0,M:0,N:0,D:0,L:0,H:0,O:0,R:0};
+  filtered.forEach(p=>Object.values(p.schedule).forEach(s=>{if(counts[s]!==undefined)counts[s]++;}));
+  document.getElementById('mStaff').textContent=filtered.length;
+  ['G1','M','N','D','L'].forEach(k=>document.getElementById('m'+k).textContent=counts[k]||0);
 
-  // metrics
-  let counts = { morning:0, evening:0, night:0, off:0 };
-  filtered.forEach(p => Object.values(p.schedule).forEach(s => counts[s] = (counts[s]||0)+1));
-  document.getElementById('mStaff').textContent = filtered.length;
-  document.getElementById('mMorning').textContent = counts.morning || 0;
-  document.getElementById('mEvening').textContent = counts.evening || 0;
-  document.getElementById('mNight').textContent = counts.night || 0;
-  document.getElementById('mOff').textContent = counts.off || 0;
+  document.getElementById('thead').innerHTML=
+    '<tr><th class="name-col">Staff</th>'+
+    dates.map(d=>'<th>'+DAYS[d.getDay()]+'<br><span style="font-weight:400;font-size:10px;color:var(--text3)">'+fmtDate(d)+'</span></th>').join('')+
+    '<th>Contact</th></tr>';
 
-  // header
-  document.getElementById('thead').innerHTML =
-    `<tr><th class="name-col">Staff</th>${DAYS.map((_,i)=>`<th>${DAYS[i]}<br><span style="font-weight:400;font-size:11px;color:var(--text-tertiary)">${fmtDate(dates[i])}</span></th>`).join('')}<th>Actions</th></tr>`;
-
-  // body
-  const tbody = document.getElementById('tbody');
-  if (!filtered.length) {
-    tbody.innerHTML = `<tr><td colspan="9" class="empty">No staff match your filters.</td></tr>`;
-    return;
-  }
-  tbody.innerHTML = filtered.map(p => `
+  const tbody=document.getElementById('tbody');
+  if(!filtered.length){tbody.innerHTML='<tr><td colspan="9" class="empty">No staff match your filters.</td></tr>';return;}
+  tbody.innerHTML=filtered.map(p=>`
     <tr>
       <td class="name-cell">
         <div class="name-main">${p.name}</div>
-        <div class="name-sub">${p.role} · ${p.dept}</div>
+        <div class="name-sub">${p.location||'—'}</div>
       </td>
-      ${[0,1,2,3,4,5,6].map(d => `
-        <td style="text-align:center;padding:4px 5px">
-          <button class="shift-pill shift-${p.schedule[d]||'off'}"
-            onclick="cycleShift(${p.id},${d})"
-            aria-label="Cycle shift for ${p.name} on ${DAYS[d]}">
-            ${SHIFT_LABELS[p.schedule[d]||'off']}
-          </button>
-        </td>`).join('')}
-      <td style="text-align:center;padding:4px">
-        <button class="btn danger" style="padding:4px 8px;font-size:12px;height:28px"
-          onclick="removeStaff(${p.id})" aria-label="Remove ${p.name}">
-          <i class="ti ti-trash" aria-hidden="true"></i>
-        </button>
-      </td>
+      ${dates.map(d=>{
+        const key=fmtKey(d);
+        const val=p.schedule[key]||'';
+        const cls=val?'pill pill-'+val:'pill pill-empty';
+        return '<td style="text-align:center;padding:3px 4px"><span class="'+cls+'">'+(val||'—')+'</span></td>';
+      }).join('')}
+      <td style="font-size:11px;color:var(--text2);padding:4px 8px;white-space:nowrap">${p.contact||'—'}</td>
     </tr>`).join('');
 }
 
-function cycleShift(id, day) {
-  const p = staff.find(s => s.id === id);
-  if (!p) return;
-  const cur = p.schedule[day] || 'off';
-  p.schedule[day] = SHIFTS[(SHIFTS.indexOf(cur)+1) % SHIFTS.length];
-  save();
-  renderGrid();
+function renderOncall(){
+  const body=document.getElementById('oncallBody');
+  body.innerHTML=ONCALL.map(row=>`
+    <tr>
+      <td class="person">${row.p1}</td>
+      <td class="person">${row.p2}</td>
+      ${row.slots.map(s=>'<td>'+(s?'<span class="oncall-badge">On-call</span>':'')+'</td>').join('')}
+    </tr>`).join('');
 }
 
-function removeStaff(id) {
-  if (!confirm('Remove this staff member?')) return;
-  staff = staff.filter(s => s.id !== id);
-  save();
-  renderGrid();
+function exportCSV(){
+  const dates=getWeekDates();
+  const header=['Name','Location','Email','Contact',...dates.map(d=>DAYS[d.getDay()]+' '+fmtDate(d))];
+  const rows=STAFF.map(p=>[p.name,p.location,p.email,p.contact,...dates.map(d=>p.schedule[fmtKey(d)]||'')]);
+  const csv=[header,...rows].map(r=>r.map(v=>'"'+(v||'')+'"').join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='basis_roster_week.csv';a.click();
 }
-
-function openAddModal() {
-  document.getElementById('mName').value = '';
-  document.getElementById('mRole').value = '';
-  document.getElementById('mDept').value = 'Kitchen';
-  document.getElementById('modalBg').classList.add('open');
-  setTimeout(() => document.getElementById('mName').focus(), 50);
-}
-
-function closeModal() { document.getElementById('modalBg').classList.remove('open'); }
-
-function saveStaff() {
-  const name = document.getElementById('mName').value.trim();
-  const role = document.getElementById('mRole').value.trim();
-  const dept = document.getElementById('mDept').value;
-  if (!name) { document.getElementById('mName').focus(); return; }
-  staff.push({ id: nextId++, name, role, dept, schedule:{0:'morning',1:'morning',2:'morning',3:'morning',4:'morning',5:'off',6:'off'} });
-  save();
-  closeModal();
-  renderGrid();
-}
-
-function exportCSV() {
-  const dates = getWeekDates();
-  const header = ['Name','Role','Department',...DAYS.map((_,i)=>DAYS[i]+' '+fmtDate(dates[i]))];
-  const rows = staff.map(p => [p.name, p.role, p.dept, ...[0,1,2,3,4,5,6].map(d=>SHIFT_LABELS[p.schedule[d]||'off'])]);
-  const csv = [header,...rows].map(r => r.map(v=>`"${v}"`).join(',')).join('\n');
-  const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-  a.download = 'shift_roster.csv';
-  a.click();
-}
-
-document.getElementById('modalBg').addEventListener('click', function(e) { if (e.target===this) closeModal(); });
-document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
 
 renderGrid();
 </script>
